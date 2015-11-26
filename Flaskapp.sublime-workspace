@@ -1,0 +1,1283 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"char",
+				"charAt"
+			],
+			[
+				"is",
+				"isVowel"
+			],
+			[
+				"re",
+				"return"
+			],
+			[
+				"count",
+				"countPairs"
+			],
+			[
+				"co",
+				"count"
+			],
+			[
+				"C",
+				"CMPEQC"
+			],
+			[
+				"FOR",
+				"FOR33"
+			],
+			[
+				"nans",
+				"nandswithbuffer"
+			],
+			[
+				"nandsw",
+				"nandswithbuffer2"
+			],
+			[
+				"xo",
+				"xorinvert"
+			],
+			[
+				"Gre",
+				"GreyCellAndOrRendition"
+			],
+			[
+				"Bl",
+				"BlackCell"
+			],
+			[
+				"Black",
+				"BlackCellAndOrRendition"
+			],
+			[
+				"Bla",
+				"BlackCellWithCustomAOI"
+			],
+			[
+				"Gr",
+				"GreyCell"
+			],
+			[
+				"tempo",
+				"tempfornandswithbuffer2"
+			],
+			[
+				"xnan",
+				"Xnandfornandswithbuffer3"
+			],
+			[
+				"tm",
+				"temp2fornandswithbuffer2"
+			],
+			[
+				"Xnandfornan",
+				"Xnandfornandswithbuffer23"
+			],
+			[
+				"Xnandfor",
+				"Xnandfornandswithbuffer22"
+			],
+			[
+				"Xnandfornandswith",
+				"Xnandfornandswithbuffer2"
+			],
+			[
+				"ou",
+				"out"
+			],
+			[
+				"Xand",
+				"XandforBlackCellAndOrRendition"
+			],
+			[
+				"black",
+				"blackcell"
+			],
+			[
+				"X",
+				"Xbufferfornandswithbuffer2"
+			],
+			[
+				"buff",
+				"buffb"
+			],
+			[
+				"Xnand",
+				"Xnandfornandswithbuffer1"
+			],
+			[
+				"nand",
+				"nand2"
+			],
+			[
+				"x",
+				"Xbufferforxorwithbuffer2"
+			],
+			[
+				"aoi",
+				"aoiwithinverter"
+			],
+			[
+				"gij",
+				"gijtemp"
+			],
+			[
+				"out",
+				"outunbuffered"
+			],
+			[
+				"in",
+				"include"
+			],
+			[
+				"alu",
+				"alumultadd"
+			],
+			[
+				"adder",
+				"adder32"
+			],
+			[
+				"mul",
+				"mult32"
+			],
+			[
+				"Out",
+				"OutputN"
+			],
+			[
+				"Ou",
+				"OutputV"
+			],
+			[
+				"temp",
+				"temp2"
+			],
+			[
+				"M",
+				"method2"
+			],
+			[
+				"th",
+				"th	throw"
+			],
+			[
+				"p",
+				"pu	public"
+			],
+			[
+				"appo",
+				"appointments"
+			],
+			[
+				"A",
+				"AppointmentsMade"
+			],
+			[
+				"T",
+				"TimeInUseException"
+			],
+			[
+				"c",
+				"ca	catch"
+			],
+			[
+				"App",
+				"AppointmentsMade"
+			],
+			[
+				"time",
+				"apptTime"
+			],
+			[
+				"appt",
+				"apptTime"
+			],
+			[
+				"app",
+				"apptTime"
+			],
+			[
+				"S",
+				"String"
+			],
+			[
+				"activat",
+				"activate"
+			],
+			[
+				"ac",
+				"active"
+			],
+			[
+				"Ca",
+				"CardNotActivatedException"
+			],
+			[
+				"el",
+				"elif	else if"
+			],
+			[
+				"a",
+				"active"
+			],
+			[
+				"im",
+				"imt	import junit.framework.TestCase;"
+			],
+			[
+				"for",
+				"fore	for (each)"
+			],
+			[
+				"pi",
+				"public"
+			],
+			[
+				"Inv",
+				"InvalidTest"
+			],
+			[
+				"bas",
+				"baseChange"
+			],
+			[
+				"sy",
+				"System"
+			],
+			[
+				"l",
+				"l1"
+			],
+			[
+				"R",
+				"Rect"
+			],
+			[
+				"new",
+				"newWidth"
+			],
+			[
+				"ne",
+				"newWidth"
+			],
+			[
+				"side",
+				"side2"
+			],
+			[
+				"sid",
+				"side1"
+			],
+			[
+				"String",
+				"StringBuilder"
+			],
+			[
+				"sied",
+				"side2"
+			],
+			[
+				"s",
+				"side1"
+			],
+			[
+				"are",
+				"areas"
+			],
+			[
+				"fo",
+				"formate"
+			],
+			[
+				"double",
+				"double"
+			],
+			[
+				"e",
+				"equation3"
+			],
+			[
+				"get",
+				"getX"
+			],
+			[
+				"pu",
+				"pu	public"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"ge",
+				"getWidth"
+			],
+			[
+				"d",
+				"double"
+			],
+			[
+				"cen",
+				"centery"
+			],
+			[
+				"print",
+				"println"
+			],
+			[
+				"string",
+				"StringBuilder"
+			],
+			[
+				"V",
+				"Vmeter"
+			],
+			[
+				"tk",
+				"Tk	class"
+			],
+			[
+				"t",
+				"true"
+			],
+			[
+				"se",
+				"Seti"
+			],
+			[
+				"Se",
+				"Seti_orange_label"
+			],
+			[
+				"seti",
+				"Seti_UI"
+			],
+			[
+				"ran",
+				"range	statement"
+			],
+			[
+				"create_",
+				"create_text	function"
+			],
+			[
+				"coun",
+				"countNumOpenLocker	function"
+			],
+			[
+				"cou",
+				"countNumOpenLocker	function"
+			],
+			[
+				"ra",
+				"range	function"
+			],
+			[
+				"lo",
+				"lockerString	statement"
+			],
+			[
+				"next",
+				"nextState"
+			],
+			[
+				"con",
+				"containSquare	function"
+			],
+			[
+				"order",
+				"orderedOutput	statement"
+			],
+			[
+				"orde",
+				"orderedOutput	statement"
+			],
+			[
+				"fin",
+				"findKey	function"
+			],
+			[
+				"nu",
+				"numpy	module"
+			],
+			[
+				"glob",
+				"globals	function"
+			],
+			[
+				"top",
+				"toplevel	statement"
+			],
+			[
+				"ins",
+				"instruct_text	globalstmt"
+			],
+			[
+				"Ins",
+				"Instructions"
+			],
+			[
+				"Instr",
+				"instructions"
+			],
+			[
+				"Photo",
+				"photo_id"
+			],
+			[
+				"photo",
+				"photo_id"
+			],
+			[
+				"ima",
+				"image"
+			],
+			[
+				"I",
+				"ImageTk	module"
+			],
+			[
+				"col",
+				"column"
+			],
+			[
+				"Dra",
+				"DrawGrid"
+			],
+			[
+				"dra",
+				"DrawGrid"
+			],
+			[
+				"bina",
+				"bitwise_and	instance"
+			],
+			[
+				"win",
+				"window"
+			],
+			[
+				"move",
+				"moveX"
+			],
+			[
+				"can",
+				"canGoRight"
+			],
+			[
+				"cango",
+				"canGoLeft"
+			],
+			[
+				"b",
+				"ball"
+			],
+			[
+				"w",
+				"width"
+			],
+			[
+				"Ov",
+				"oval	statement"
+			],
+			[
+				"Tr",
+				"True	keyword"
+			],
+			[
+				"ca",
+				"canvas	statement"
+			],
+			[
+				"Strign",
+				"StringVar	class"
+			],
+			[
+				"mag",
+				"magnify	statement"
+			],
+			[
+				"boar",
+				"board"
+			],
+			[
+				"boa",
+				"board"
+			],
+			[
+				"mon",
+				"monthlyPayment"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "HelloWorld.py",
+			"settings":
+			{
+				"buffer_size": 228,
+				"line_ending": "Unix",
+				"name": "from flask import Flask"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Anaconda Python Builder",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/SublimeREPL_Python.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/SublimeREPL_Python.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/C.sublime-build",
+					""
+				],
+				[
+					"Packages/User/GCC.sublime-build",
+					""
+				],
+				[
+					"Packages/User/SublimeREPL_Python.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/GCC.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Java/Ant.sublime-build",
+					""
+				],
+				[
+					"Packages/Java/JavaC.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Java.sublime-build",
+					""
+				],
+				[
+					"Packages/User/SublimeREPL_Python.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/Java.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Java/Ant.sublime-build",
+					""
+				],
+				[
+					"Packages/Java/JavaC.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/SublimeREPL_Python.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Java/JavaC.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/jsim-custom.sublime-build",
+					""
+				],
+				[
+					"Packages/User/SublimeREPL_Python.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/jsim-custom.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 175.0,
+		"last_filter": "anax",
+		"selected_items":
+		[
+			[
+				"anax",
+				"Anaconda: Next lint error"
+			],
+			[
+				"set syntax: Python",
+				"Set Syntax: Python"
+			],
+			[
+				"set syntax: Java",
+				"Set Syntax: Java"
+			],
+			[
+				"set syntax: sim",
+				"Set Syntax: Ruby Slim"
+			],
+			[
+				"set syntax:sl",
+				"Set Syntax: Ruby Slim"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"isntall",
+				"Package Control: Install Package"
+			],
+			[
+				"C",
+				"Set Syntax: C"
+			],
+			[
+				"jsim",
+				"Set Syntax: JSim"
+			],
+			[
+				"isnt",
+				"Package Control: Install Package"
+			],
+			[
+				"javat",
+				"Javatar: Builds..."
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"py",
+				"Set Syntax: Python"
+			],
+			[
+				"mark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"pyt",
+				"Set Syntax: Python"
+			],
+			[
+				"subl",
+				"SublimeREPL: Python"
+			],
+			[
+				"emac",
+				"Set Syntax: OCamlyacc"
+			],
+			[
+				"pyth",
+				"Set Syntax: Python"
+			],
+			[
+				"package contr",
+				"Package Control: Add Channel"
+			],
+			[
+				"python",
+				"Set Syntax: Python"
+			],
+			[
+				"repl: py",
+				"SublimeREPL: Python"
+			],
+			[
+				"pythn",
+				"Set Syntax: Python"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"pac",
+				"Package Control: Remove Package"
+			],
+			[
+				"anacon",
+				"Anaconda: Disable linting on this file"
+			],
+			[
+				"repl p",
+				"SublimeREPL: Python"
+			],
+			[
+				"package ins",
+				"Package Control: Install Package"
+			],
+			[
+				"pytho",
+				"Set Syntax: Python"
+			],
+			[
+				"sublim",
+				"SublimeREPL: Python"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 527.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/arjunbrar/Desktop/FlaskApp"
+	],
+	"file_history":
+	[
+		"/Users/arjunbrar/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/arjunbrar/Downloads/src/piano/Instrument.java",
+		"/Users/arjunbrar/Downloads/src/piano/PianoApplet.java",
+		"/Users/arjunbrar/Downloads/src/piano/NoteEvent.java",
+		"/Users/arjunbrar/Downloads/src/piano/Midi.java",
+		"/Users/arjunbrar/Downloads/src/piano/Pitch.java",
+		"/Users/arjunbrar/Downloads/src/piano/PianoMachine.java",
+		"/Users/arjunbrar/Downloads/src/midi/Midi.java",
+		"/Users/arjunbrar/Desktop/Java/hailstoneSequence.java",
+		"/Users/arjunbrar/Desktop/Java/exam2013/count.java",
+		"/Users/arjunbrar/Downloads/LAB_5.txt",
+		"/Users/arjunbrar/Desktop/BSIM/lab5.bsim",
+		"/Users/arjunbrar/Downloads/GetPath.java",
+		"/Users/arjunbrar/Downloads/FastSolverPseudoCode.txt",
+		"/Users/arjunbrar/Desktop/multiversemag/app/views/public/root.html.slim",
+		"/Users/arjunbrar/Desktop/Optimized32bitadder.jsim",
+		"/Users/arjunbrar/50002/nominal.jsim",
+		"/Users/arjunbrar/50002/stdcell.jsim",
+		"/Users/arjunbrar/Desktop/JSIN/Robin'sSample.JSIM",
+		"/Users/arjunbrar/Desktop/JSIN/lab3addernew.jsim",
+		"/Users/arjunbrar/Desktop/JSIN/LAB3_DOOFUS.JSIM",
+		"/Users/arjunbrar/Desktop/JSIN/lab3checkoff combined.jsim",
+		"/Users/arjunbrar/Desktop/JSIN/lab3multiplier.jsim",
+		"/Users/arjunbrar/Desktop/Java/week 3/ns",
+		"/Users/arjunbrar/Desktop/Java/week 3/akslnd.java",
+		"/Users/arjunbrar/Desktop/Scheduler2.java",
+		"/Users/arjunbrar/Desktop/SongCard.java",
+		"/Users/arjunbrar/Desktop/CatchingExceptionsv6.java",
+		"/Users/arjunbrar/Desktop/CatchingExceptionsv4.java",
+		"/Users/arjunbrar/Desktop/Java/Quiz/Div.java",
+		"/Users/arjunbrar/Desktop/Java/Quiz/MergeSort.java",
+		"/Users/arjunbrar/Desktop/Java/Quiz/Rect.java",
+		"/Users/arjunbrar/Desktop/Java/Account.java",
+		"/Users/arjunbrar/Desktop/Java/MyRectangle2D.java",
+		"/Users/arjunbrar/Desktop/Java/Quiz/wer",
+		"/Users/arjunbrar/Desktop/Java/printList.java",
+		"/Users/arjunbrar/Library/Application Support/Sublime Text 3/Packages/User/Java.sublime-build",
+		"/Users/arjunbrar/Desktop/Java/untitled.java",
+		"/Users/arjunbrar/Desktop/eduroam-2012.mobileconfig",
+		"/Users/arjunbrar/Desktop/untitled folder/Account.java",
+		"/Users/arjunbrar/Desktop/untitled folder/test.java",
+		"/Users/arjunbrar/Desktop/python stuff/1.py",
+		"/Users/arjunbrar/Desktop/python stuff/test.java",
+		"/Users/arjunbrar/Desktop/SUTDreddit/sample-project/mup.json",
+		"/Users/arjunbrar/Desktop/SUTDreddit/sample-project/app.json",
+		"/Users/arjunbrar/Desktop/untitled.mdown",
+		"/Users/arjunbrar/Library/Application Support/Sublime Text 3/Packages/Schemr/Default (OSX).sublime-keymap",
+		"/Users/arjunbrar/Library/Application Support/Sublime Text 3/Packages/Themr/Default (OSX).sublime-keymap",
+		"/Users/arjunbrar/Desktop/dw/sample_code.py",
+		"/Users/arjunbrar/Desktop/dw/1D- Project/connect 4.py",
+		"/Users/arjunbrar/Desktop/dw/DW Final/7.py",
+		"/Users/arjunbrar/Desktop/dw/DW Final/3.py",
+		"/Users/arjunbrar/Desktop/Connect_4/game.py",
+		"/Users/arjunbrar/Desktop/Connect_4/shit to do.matlab",
+		"/Users/arjunbrar/Desktop/test/board.py",
+		"/Users/arjunbrar/Desktop/test/connect 4.py",
+		"/Users/arjunbrar/Desktop/test/multiple constant test.py",
+		"/Users/arjunbrar/Desktop/test/image type test.py",
+		"/Users/arjunbrar/Desktop/test/image test.py",
+		"/Users/arjunbrar/Desktop/connect - 4 /board.py",
+		"/Users/arjunbrar/Desktop/connect - 4 /connect-4.py",
+		"/Users/arjunbrar/Desktop/test/print range(0,5).py",
+		"/Users/arjunbrar/Desktop/WK12CHECKOFF1.py",
+		"/Users/arjunbrar/Desktop/wk12",
+		"/Users/arjunbrar/Desktop/wk12Ckh3.py",
+		"/Users/arjunbrar/Desktop/1D- Project/board.py",
+		"/Users/arjunbrar/Desktop/1D- Project/connect 4.py",
+		"/Users/arjunbrar/Library/Application Support/Sublime Text 3/Packages/User/SublimeREPL_Python.sublime-build",
+		"/Users/arjunbrar/Desktop/wk12ckoff4.py",
+		"/Users/arjunbrar/Desktop/tkinter python connect 4.py",
+		"/Users/arjunbrar/Desktop/FtoC.py",
+		"/Volumes/BOOTCAMP/Users/Arjun/Desktop/test.py",
+		"/Users/arjunbrar/Desktop/self - written connect 4.py",
+		"/Users/arjunbrar/Desktop/connect-4.py",
+		"/Users/arjunbrar/Desktop/conenct - 4.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/fuckthisshit.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/fuckthisshit2.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/customfunctions.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/test.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/brain_2.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/pathFinder.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/brain.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/actionFunction.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/switchtest.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/testing_switch.py",
+		"/Users/arjunbrar/Desktop/Amigobot_brain.py",
+		"/Users/arjunbrar/Desktop/Robin_Code_modified_to_be_mien.py",
+		"/Users/arjunbrar/Desktop/Robin_Code.py",
+		"/Users/arjunbrar/Desktop/test.py",
+		"/Users/arjunbrar/Desktop/wallfollower.py",
+		"/Users/arjunbrar/Desktop/new_Amigobot_brain.py",
+		"/Users/arjunbrar/Desktop/Amigobot Rewrite/2d _ 14f05 _ grp 7/untitled.py",
+		"/Users/arjunbrar/Desktop/propWallFollowBrainWork.py",
+		"/Users/arjunbrar/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/arjunbrar/Desktop/smBrain.py"
+	],
+	"find":
+	{
+		"height": 29.0
+	},
+	"find_in_files":
+	{
+		"height": 106.0,
+		"where_history":
+		[
+			"",
+			"Gtemp"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"s3e3g",
+			"s3e3p",
+			"summerex2",
+			"summertry",
+			"summer",
+			"blackcell",
+			"blackcellex",
+			"blackcellaoi",
+			"greycell",
+			"pgsigs",
+			"XB3",
+			"s0e3p",
+			"g",
+			"gen",
+			"s2e2g",
+			"addwe",
+			"stage2g2blah",
+			"xadder",
+			"summerex",
+			"altxor2",
+			"altxor",
+			"aio21",
+			"aoi21",
+			"blackcellaoi",
+			"blackcell",
+			"vouthax5",
+			"vouthax4",
+			"vouthax3",
+			"vouthax2",
+			"vouthax",
+			"haxorx",
+			"andhax",
+			"ulti",
+			"buffer",
+			"Ptemp",
+			"Ptemp\n}",
+			"n",
+			"\n}",
+			"an",
+			"announ",
+			"self.b.tie",
+			"def gameOver",
+			"gameOver",
+			"allowed",
+			"purple",
+			"green",
+			"mouse",
+			"win",
+			"arange",
+			"button",
+			"random",
+			"OUTPUTST",
+			"OUT",
+			"preparepath",
+			"gensearch",
+			"TL",
+			"collection",
+			"stateOption = \"Option15\"",
+			"stateOption = \"Option14\"",
+			"stateOption = \"Option14`\"",
+			"stateOption = \"Option13\"",
+			"stateOption = \"Option12\"",
+			"stateOption = \"Option11\"",
+			"stateOption = \"Option10\"",
+			"stateOption = \"Option9\"",
+			"stateOption = \"Option8\"",
+			"stateOption = \"Option7\"",
+			"stateOption = \"Option6\"",
+			"stateOption = \"Option5\"",
+			"stateOption = \"Option4\"",
+			"stateOption = \"Option3\"",
+			"stateOption = \"Option2\"",
+			"stateOption = \"Option1\"",
+			"nextstatE",
+			"return",
+			"Sensor",
+			"inp",
+			"INP",
+			"self.",
+			"previousFront",
+			"prev",
+			"Counte",
+			"Counter",
+			"Search",
+			"sensor",
+			"left",
+			"path",
+			"data",
+			"path",
+			"break",
+			"print",
+			"visi",
+			"state",
+			"states vi",
+			"fvel",
+			"time",
+			"self.current",
+			"self.command",
+			"self.com",
+			"self.",
+			"print",
+			"pop",
+			", 0)\n                        else:",
+			"pop",
+			"hadwall",
+			"median",
+			"Fwd",
+			"Whereis",
+			"maxReading5",
+			"RIGHTM",
+			"fvel",
+			"SensorMachine",
+			"upperB",
+			"factor",
+			"toler",
+			"for",
+			"fVel",
+			"dDesired"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"Gtemp",
+			"state = (\"junction\", 0, counter, inp)",
+			"state = (\"rotate\", 0, 0, inp)",
+			"state = (\"wait\", timer, 0, inp)",
+			"state = (\"exitRotate\", 0, counter, inp)",
+			"state = (\"exitRotate\", 0, 0, inp)",
+			"state = (\"rotate\", 0, counter, inp)",
+			"state = (\"turnLeft\", 0, counter, inp)",
+			"state = (\"exitJunction\", 0, counter, inp)",
+			"state = (\"exitJunction\", 0, 0, inp)",
+			"state = (\"turnRight\", 0, 0, inp)",
+			"state = (\"turnLeft\", 0, 0, inp)",
+			"state = (\"junction\", 0, 0, inp)",
+			"state = (\"wait\", 0, 0, inp)",
+			"state = (\"moveForward\", 0, 0, inp)",
+			"",
+			"return"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": true,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "HelloWorld.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 228,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								228,
+								228
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_name": "from flask import Flask",
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 29.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 169.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 25.0
+	},
+	"pinned_build_system": "Packages/User/jsim-custom.sublime-build",
+	"project": "Flaskapp.sublime-project",
+	"replace":
+	{
+		"height": 54.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"root",
+				"app/views/public/root.html.slim"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 449.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 170.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
