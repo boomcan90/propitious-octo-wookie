@@ -1,15 +1,46 @@
-from flask import Flask
+from flask import Flask, render_template, request, url_for, redirect, session
+import sparkfunction
+
 app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    return "Flask(__name__)"
+def DataNow():
+    dataDict = sparkfunction.VarUpdate("delimOT")
+    dataVals = dataDict.split(";")
+    tempdata = dataVals[0]
+    ledstatus = ledsparkvar(int(dataVals[1]))
+    utimedata = dataVals[2] + " Days, " + dataVals[3] + \
+        ":" + dataVals[4] + ":" + dataVals[5]
+
+    authcookie = False
+    if 'authuser' in session:
+        authcookie = True
+    if (request.args.get('auth') == 'xxx') or (authcookie):
+        authbool = True
+    else:
+        authbool = False
+    return render_template('sparktemplate.html', tempdata=tempdata,
+                           utimedata=utimedata, ledstatus=ledstatus,
+                           authbool=authbool)
 
 
-@app.route('/testpage')
-def testpage():
-    return "This is a testpage"
+@app.route('/led', methods=['POST'])
+def LEDChange():
+    sparkfunction.sparkLED(request.form['LED'])
+    session['authuser'] = 'xxx'
+    session.permanent = True
+    return redirect('./')
+
+
+def ledsparkvar(ledstatusInt):
+    if ledstatusInt == 1:
+        ledstatus = "On"
+    elif ledstatusInt == 0:
+        ledstatus = "Off"
+    else:
+        ledstatus = "LED Error"
+    return ledstatus
 
 
 if __name__ == '__main__':

@@ -1,0 +1,24 @@
+<!doctype html>
+<head>
+<title>Current Data</title>
+</head>
+
+    <h1>Temperature is: {{ tempdata }}<br>
+        Uptime is: {{ utimedata }}</h1>
+<form>
+<input type="button"  onClick="history.go(0)" value="Refresh">
+</form>
+<hr>
+<h1>LED Control</h1>
+<h2>Current Status: {{ ledstatus }}</h2>
+{% if authbool %}
+<form name="LEDaction" method="post" action="led">
+<input type="radio" name="LED" value="ledon">On
+<br>
+<br>
+<input type="radio" name="LED" value="ledoff">Off
+<br>
+<br>
+<input type="submit" name="Submit"value="Submit">
+</form>
+{% endif %}
