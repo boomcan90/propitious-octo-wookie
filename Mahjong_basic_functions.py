@@ -12,7 +12,7 @@ tiles = []
 characterTiles = []
 dragonTiles = []
 windTiles = []
-currentTiles = ['N', 'S', 'W']
+currentTiles = ['N', 'S', 'N']
 
 #character suit: characterTiles, tiles
 for i in range(1,10):
@@ -46,6 +46,12 @@ print windTiles
 print characterTiles
 print dragonTiles
 
+winningCombinations = []
+for i in tiles:
+	winningCombinations.append([i]*3)
+
+print winningCombinations	#to win
+
 ########################################################
 
 '''
@@ -66,7 +72,7 @@ FUNCTION 1: GENERATES RANDOM TILES
 Basically takes a number of tiles to generate(numTiles) and generates them.
 Makes sure that tiles generated are in the tiles set. 
 Make sure that tiles are not repeated.
-**necessary?r
+**necessary?
 '''
 def randomTileGen(numTiles):
 	tilesToGenerate = []
@@ -75,7 +81,7 @@ def randomTileGen(numTiles):
 		for i in range(0, numTiles):
 				tilesToGenerate.append(random.randint(0, len(tiles)-1))
 				generated = tiles[tilesToGenerate[i]]
-				if(generated not in currentTiles and generated not in tilesGenerated):
+				if(currentTiles.count(generated) <= 3 and tilesToGenerate.count(generated) <=3):
 					tilesGenerated.append(generated)
 
 	return tilesGenerated
@@ -88,25 +94,10 @@ print randomTileGen(2)
 FUNCTION 2: CHECK IF PLAYER HAS WON 
 Here, checks if tiles that player has form a winning combination
 '''
-winningCombinationsChar = []
-winningCombinationsDragon = []
-winningCombinationsWind = []
-winningCombinations = []
-
-winningCombinationsChar =  list(itertools.permutations(characterTiles, 3))	#24 combi
-winningCombinationsDragon =  list(itertools.permutations(dragonTiles, 3))	#6 combi
-winningCombinationsWind =  list(itertools.permutations(windTiles, 3))		#524 combi
-winningCombinations.extend(winningCombinationsWind)
-winningCombinations.extend(winningCombinationsDragon)
-winningCombinations.extend(winningCombinationsChar)
-
-
-print len(winningCombinations)
 
 
 def hasWon(tiles):
-	for i in winningCombinations:
-		if (currentTiles == i):
+	if(tiles in winningCombinations):
 		print "Win!"
 	else:
 		print "Continue playing"
