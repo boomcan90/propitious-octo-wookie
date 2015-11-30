@@ -3,8 +3,13 @@ import sparkfunction
 
 app = Flask(__name__)
 
-
 @app.route('/')
+def main():
+    # return "test"
+    return render_template('./sparktemplate.html', tempdata = 1, utimedata = 1, ledstatus = 1, authbool = True)
+
+
+@app.route('/dataNow')
 def DataNow():
     dataDict = sparkfunction.VarUpdate("delimOT")
     dataVals = dataDict.split(";")
@@ -43,9 +48,9 @@ def ledsparkvar(ledstatusInt):
     return ledstatus
 
 
-@app.route("/user", methods=['DELETE'])
+@app.route("/user", methods=['GET'])
 def Logout():
-    user.login = False
+    # user.login = False
     return None
 
 
