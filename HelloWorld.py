@@ -3,10 +3,12 @@ import sparkfunction
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def main():
     # return "test"
-    return render_template('./sparktemplate.html', tempdata = 1, utimedata = 1, ledstatus = 1, authbool = True)
+    return render_template('./sparktemplate.html', tempdata=1, utimedata=1,
+                           ledstatus=1, authbool=True)
 
 
 @app.route('/dataNow')
@@ -48,9 +50,10 @@ def ledsparkvar(ledstatusInt):
     return ledstatus
 
 
-@app.route("/user", methods=['GET'])
-def Logout():
-    # user.login = False
+@app.route("/game", methods=['POST'])
+def startgame(*vars):
+    # Insert code linking to Dhanya's code here
+    # And make sure that it works
     return None
 
 
