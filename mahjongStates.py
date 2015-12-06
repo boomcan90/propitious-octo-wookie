@@ -67,8 +67,10 @@ def game_started(inpList):
         orientationP2.append(inpList[j].orientation)
 
 # Now if all tiles orientation is down, start game.
-#Else, error
-    if (orientationP1.count('up') == 2 and orientationP1.count('down') == 1 and orientationP2.count('down') == 3):
+# Else, error
+
+    if (orientationP1.count('up') == 2 and orientationP1.count('down') == 1 and
+            orientationP2.count('down') == 3):
         newState = 'p1TurnStart'
 
     else:
@@ -172,15 +174,15 @@ def p2_turn_start(inpList):
     # INPLIST
 
     # Creating 3 tiles for user 1
-    Tile2_1 = Tile('up', 'circle_1')
-    Tile2_2 = Tile('up', 'circle_2')
-    Tile2_3 = Tile('up', 'circle_3')
-    User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
-
-    # Creating 3 tiles for user 2
     Tile1_1 = Tile('up')
     Tile1_2 = Tile('down')
     Tile1_3 = Tile('up')
+    User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
+
+    # Creating 3 tiles for user 2
+    Tile2_1 = Tile('up', 'circle_1')
+    Tile2_2 = Tile('up', 'circle_2')
+    Tile2_3 = Tile('up', 'circle_3')
     User2.tiles = [Tile2_1, Tile2_2, Tile2_3]
 
     inpList = []
@@ -189,7 +191,7 @@ def p2_turn_start(inpList):
 
     orientationP1 = []
     orientationP2 = []
-    listTilesP1 = []
+    listTilesP2 = []
 
     for i in range(0, 3):
         orientationP1.append(inpList[i].orientation)
@@ -219,7 +221,6 @@ def p2_turn_start(inpList):
 def p2_turn_end(inpList):
     orientationP1 = []
     orientationP2 = []
-    listTilesP1 = []
 
     for i in range(0, 3):
         orientationP1.append(inpList[i].orientation)
