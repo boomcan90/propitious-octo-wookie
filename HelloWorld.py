@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, url_for, redirect, session
+from flask import Flask, render_template, request, url_for, redirect, session, Response
 import sparkfunction
 import PhotonCall
 import mahjongStates_vFINAL
+import subprocess
+import time
 
 app = Flask(__name__)
 
@@ -63,6 +65,27 @@ def startgame(*vars):
 def update():
     PhotonCall.sendToPhoton("led")
     return "Done! - Information Sent"
+
+
+# Testing some stuff - if its possible to show the current state on the
+# webserver
+@app.route('/yield')
+def index():
+    def inner():
+        proc = subprocess.Popen(
+            # call something with a lot of output so we can see it
+            [mahjongStates_vFINAL()],
+            shell=True,
+            stdout=subprocess.PIPE
+        )
+
+        for line in iter(proc.stdout.readline, ''):
+            # Don't need this just shows the text streaming
+            time.sleep(1)
+            yield line.rstrip() + '<br/>\n'
+
+    # text/html is required for most browsers to show th$
+    return Response(inner(), mimetype='text/html')
 
 if __name__ == '__main__':
     # TODO: add algo to make the tiles here
