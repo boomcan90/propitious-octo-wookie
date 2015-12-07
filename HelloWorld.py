@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, session
 import sparkfunction
+import PhotonCall
 
 app = Flask(__name__)
 
@@ -57,7 +58,11 @@ def startgame(*vars):
     return None
 
 
+@app.route("/updatePhotonLED", methods=['POST'])
+def update():
+    PhotonCall.sendToPhoton("led")
+
+
 if __name__ == '__main__':
     # TODO: add algo to make the tiles here
-    app.debug = True
     app.run()
