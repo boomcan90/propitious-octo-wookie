@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, session
 import sparkfunction
 import PhotonCall
+import mahjongStates_vFINAL
 
 app = Flask(__name__)
 
@@ -51,17 +52,17 @@ def ledsparkvar(ledstatusInt):
     return ledstatus
 
 
-@app.route("/game", methods=['POST'])
+@app.route("/game")
 def startgame(*vars):
-    # Insert code linking to Dhanya's code here
-    # And make sure that it works
-    return None
+    # TODO: Things to add:
+    mahjongStates_vFINAL()
+    return "Game Started!"
 
 
-@app.route("/updatePhotonLED", methods=['POST'])
+@app.route("/update")
 def update():
     PhotonCall.sendToPhoton("led")
-
+    return "Done! - Information Sent"
 
 if __name__ == '__main__':
     # TODO: add algo to make the tiles here
