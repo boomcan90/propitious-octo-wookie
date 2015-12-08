@@ -19,11 +19,20 @@ xmpp.register_plugin('xep_0198') # Stream Management
 xmpp.register_plugin('xep_0199')  # XMPP Ping
 
 # Connect to the XMPP server and start processing XMPP stanzas.
-gcm_connection =  xmpp.connect(('gcm.googleapis.com', 5235), use_ssl=True)
+xmpp.startConnection()
 
-if gcm_connection:
-    # Threaded, non blocking
-    xmpp.process(block=False)
+
+# Keyboard Interrupt for XMPP thread
+import signal
+import sys
+import time
+
+def signal_handler(signal, frame):
+    print 'You pressed Ctrl+C!'
+    xmpp.disconnect()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 
 
@@ -83,14 +92,13 @@ def gcmTest():
             {
                 "number": "mobile number",
                 "message": "Meow meow meow"
-                # "message": u"odoo 测试 GCMSMS 网关:sleepxmpp",
             },
         "time_to_live": 600,
         "delay_while_idle": True,
         "delivery_receipt_requested": True
     }
     xmpp.send_gcm_message(message)
-    return "trying"
+    return "SENT MESSAGE TO ANDROID VIA GCM!"
 
 
 @app.route("/game")
