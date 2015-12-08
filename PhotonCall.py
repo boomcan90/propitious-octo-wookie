@@ -9,14 +9,17 @@ from credentials import *
 # PARTICLE_FUNCTION = "YOUR_PARTICLE_FUNCTION"
 
 
-def sendToPhoton(PARTICLE_FUNCTION):
+def sendToPhoton(payload_for_sending):
     # VARIABLES
-    if (PARTICLE_FUNCTION == ""):
-        PARTICLE_FUNCTION = "LED"
+
+    if (payload_for_sending == ""):
+        payload_for_sending = "on"
+
+    PARTICLE_FUNCTION = "LED"
     URL = "https://api.particle.io/v1/devices/"
     SLASH = "/"
     TOKEN_LABEL = "?access_token="
-    PAYLOAD = {"args": "on"}
+    PAYLOAD = {"args": payload_for_sending}
 
     # COMMANDLINE ARGS
     # 0 -  file_name.py , 1 - arg[0] ...
@@ -28,4 +31,7 @@ def sendToPhoton(PARTICLE_FUNCTION):
     result = requests.post(URL + PARTICLE_ID + SLASH +
                            PARTICLE_FUNCTION + TOKEN_LABEL +
                            PARTICLE_ACCESS_TOKEN, json=PAYLOAD)
-    return None
+    return "finished running"
+
+if __name__ == "__main__":
+    sendToPhoton()

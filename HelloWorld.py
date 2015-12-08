@@ -55,27 +55,29 @@ def ledsparkvar(ledstatusInt):
 
 
 @app.route("/game")
-def startgame(*vars):
-    # TODO: Things to add:
-    mahjongStates_vFINAL()
+def game():
+    mahjongStates_vFINAL.startthegoddamnedgame()
     return "Game Started!"
 
 
 @app.route("/update")
 def update():
-    PhotonCall.sendToPhoton("led")
+    action = request.args.get('action', '')
+    if action == '':
+        action = "on"
+    PhotonCall.sendToPhoton(action)
     return "Done! - Information Sent"
 
 
 # Testing some stuff - if its possible to show the current state on the
 # webserver
-@app.route('/yield')
-def index():
+@app.route('/yeild')
+def yeild():
     def inner():
         proc = subprocess.Popen(
             # call something with a lot of output so we can see it
-            [mahjongStates_vFINAL()],
-            shell=True,
+            ["python", "mahjongStates_vFINAL.py"],
+            shell=False,
             stdout=subprocess.PIPE
         )
 
