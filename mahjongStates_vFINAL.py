@@ -122,12 +122,10 @@ def p1_turn_start(inpList):
     else:
         newState = 'p1TurnStart'
 
-
     # Check if p1 has won:
     if(listTilesP1 in localWinningCombinations):
         print 'p1 win state'
         newState = 'p1Win'
-
 
     return(newState, inpList)
 
@@ -210,14 +208,12 @@ def p2_turn_start(inpList):
 
      # Else, stay in same state
     else:
-        newState = 'p2TurnStart' 
+        newState = 'p2TurnStart'
 
     # Check if p1 has won:
     if(listTilesP2 in localWinningCombinations):
         print 'p2 win'
         newState = 'p2Win'
-
-
 
     return(newState, inpList)
 
@@ -254,15 +250,14 @@ def p2_win(inpList):
     return(newState, inpList)
 
 
-
-
 ##########################################################################
 # Setting up game:
 allTiles = []
 allTiles.extend(User1.tiles)
 allTiles.extend(User2.tiles)
 
-if __name__ == "__main__":
+
+def startthegoddamnedgame():
     m = StateMachine()
     m.add_state("GameStarts", game_started)
     m.add_state("p1TurnStart", p1_turn_start)
@@ -274,3 +269,7 @@ if __name__ == "__main__":
     m.add_state("Game_Over", None, end_state=1)
     m.set_start("GameStarts")
     m.run(allTiles)
+
+
+if __name__ == "__main__":
+    startthegoddamnedgame()
