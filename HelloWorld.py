@@ -4,16 +4,46 @@ import PhotonCall
 import mahjongStates_vFINAL
 import subprocess
 import time
+import GcmBot
+import uuid
+
 
 app = Flask(__name__)
 
+##################################################################
+# SETUP GcmBot. Basically you have an object called "xmpp"
+##################################################################
+xmpp = GcmBot.GcmBot(GcmBot.USERNAME, GcmBot.PASSWORD)
+xmpp.register_plugin('xep_0184') # Message Delivery Receipts
+xmpp.register_plugin('xep_0198') # Stream Management
+xmpp.register_plugin('xep_0199')  # XMPP Ping
 
+# Connect to the XMPP server and start processing XMPP stanzas.
+xmpp.startConnection()
+
+
+# Keyboard Interrupt for XMPP thread
+import signal
+import sys
+import time
+
+def signal_handler(signal, frame):
+    print 'You pressed Ctrl+C!'
+    xmpp.disconnect()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+
+
+##################################################################
+# ROUTING
+##################################################################
 @app.route('/')
 def main():
     # return "test"
     return render_template('./sparktemplate.html', tempdata=1, utimedata=1,
                            ledstatus=1, authbool=True)
-
 
 @app.route('/dataNow')
 def DataNow():
@@ -52,6 +82,27 @@ def ledsparkvar(ledstatusInt):
     else:
         ledstatus = "LED Error"
     return ledstatus
+
+
+##################################################################
+# Example of how you would use the XMPP object to send message.
+##################################################################
+@app.route("/gcm")
+def gcmTest():
+    message = {
+        "to": GcmBot.iot_mahjong_s6,
+        "message_id": uuid.uuid1().urn[9:],
+        "data":
+            {
+                "number": "mobile number",
+                "message": "Meow meow meow"
+            },
+        "time_to_live": 600,
+        "delay_while_idle": True,
+        "delivery_receipt_requested": True
+    }
+    xmpp.send_gcm_message(message)
+    return "SENT MESSAGE TO ANDROID VIA GCM!"
 
 
 @app.route("/game")
