@@ -4,16 +4,37 @@ import PhotonCall
 import mahjongStates_vFINAL
 import subprocess
 import time
+import GcmBot
+import uuid
+
 
 app = Flask(__name__)
 
+##################################################################
+# SETUP GcmBot
+##################################################################
+xmpp = GcmBot.GcmBot(GcmBot.USERNAME, GcmBot.PASSWORD)
+xmpp.register_plugin('xep_0184') # Message Delivery Receipts
+xmpp.register_plugin('xep_0198') # Stream Management
+xmpp.register_plugin('xep_0199')  # XMPP Ping
 
+# Connect to the XMPP server and start processing XMPP stanzas.
+gcm_connection =  xmpp.connect(('gcm.googleapis.com', 5235), use_ssl=True)
+
+if gcm_connection:
+    # Threaded, non blocking
+    xmpp.process(block=False)
+
+
+
+##################################################################
+# ROUTING
+##################################################################
 @app.route('/')
 def main():
     # return "test"
     return render_template('./sparktemplate.html', tempdata=1, utimedata=1,
                            ledstatus=1, authbool=True)
-
 
 @app.route('/dataNow')
 def DataNow():
@@ -52,6 +73,24 @@ def ledsparkvar(ledstatusInt):
     else:
         ledstatus = "LED Error"
     return ledstatus
+
+@app.route("/gcm")
+def gcmTest():
+    message = {
+        "to": GcmBot.iot_mahjong_s6,
+        "message_id": uuid.uuid1().urn[9:],
+        "data":
+            {
+                "number": "mobile number",
+                "message": "Meow meow meow"
+                # "message": u"odoo 测试 GCMSMS 网关:sleepxmpp",
+            },
+        "time_to_live": 600,
+        "delay_while_idle": True,
+        "delivery_receipt_requested": True
+    }
+    xmpp.send_gcm_message(message)
+    return "trying"
 
 
 @app.route("/game")
