@@ -11,7 +11,7 @@ import uuid
 app = Flask(__name__)
 
 ##################################################################
-# SETUP GcmBot
+# SETUP GcmBot. Basically you have an object called "xmpp"
 ##################################################################
 xmpp = GcmBot.GcmBot(GcmBot.USERNAME, GcmBot.PASSWORD)
 xmpp.register_plugin('xep_0184') # Message Delivery Receipts
@@ -83,6 +83,10 @@ def ledsparkvar(ledstatusInt):
         ledstatus = "LED Error"
     return ledstatus
 
+
+##################################################################
+# Example of how you would use the XMPP object to send message.
+##################################################################
 @app.route("/gcm")
 def gcmTest():
     message = {
