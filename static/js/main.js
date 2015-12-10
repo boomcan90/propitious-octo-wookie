@@ -12,6 +12,9 @@
 
     function AppController($scope, $http) {
         $scope.stuff = "sfafd";
+
+        //123 green
+        //456 orange
         $scope.tile1 = {
             name: "raptor_zombie",
             deviceToken: "210039000347343337373737",
@@ -23,10 +26,26 @@
             value: "2"
         }
         $scope.tile3 = {
-            name: "pirate_bobcat",
-            deviceToken: "250040000347343337373737",
+            name: "hunter_hoosier",
+            deviceToken: "1c003e000d47343432313031",
             value: "3"
         }
+        $scope.tile4 = {
+            name: "monkey_hoosier",
+            deviceToken: "3b003d000347343339373536",
+            value: "1"
+        }
+        $scope.tile5 = {
+            name: "pirate_bobcat",
+            deviceToken: "250040000347343337373737",
+            value: "2"
+        }
+        $scope.tile6 = {
+            name: "morphing_bobcat",
+            deviceToken: "2b002d000447343233323032",
+            value: "3"
+        }
+
 
         $scope.getPositions = function() {
             $http.get('https://api.particle.io/v1/devices/' + $scope.tile1.deviceToken + '/tile?access_token=5fdaa0f2dc84764338a30bebe5d695bbdd458c8a').then(function(result) {
@@ -62,6 +81,28 @@
             });
             $http.post('https://api.particle.io/v1/devices/' + $scope.tile3.deviceToken + '/tile?access_token=5fdaa0f2dc84764338a30bebe5d695bbdd458c8a', {
                 "args": $scope.tile3.value
+            }).then(function(result) {
+                console.log(result)
+            }, function(result) {
+                console.log(result)
+            });
+
+            $http.post('https://api.particle.io/v1/devices/' + $scope.tile4.deviceToken + '/tile?access_token=5fdaa0f2dc84764338a30bebe5d695bbdd458c8a', {
+                "args": $scope.tile4.value
+            }).then(function(result) {
+                console.log(result)
+            }, function(result) {
+                console.log(result)
+            });
+            $http.post('https://api.particle.io/v1/devices/' + $scope.tile5.deviceToken + '/tile?access_token=5fdaa0f2dc84764338a30bebe5d695bbdd458c8a', {
+                "args": $scope.tile5.value
+            }).then(function(result) {
+                console.log(result)
+            }, function(result) {
+                console.log(result)
+            });
+            $http.post('https://api.particle.io/v1/devices/' + $scope.tile6.deviceToken + '/tile?access_token=5fdaa0f2dc84764338a30bebe5d695bbdd458c8a', {
+                "args": $scope.tile6.value
             }).then(function(result) {
                 console.log(result)
             }, function(result) {
