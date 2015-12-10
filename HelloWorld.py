@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, session, Response
 import sparkfunction
 import PhotonCall
-import mahjongStates_vFINAL
+# import mahjongStates_vFINAL
 import subprocess
 import time
 import GcmBot
@@ -153,10 +153,10 @@ def registerClient():
     return "Registration with: ", content
 
 
-@app.route("/game")
-def game():
-    mahjongStates_vFINAL.startthegoddamnedgame()
-    return "Game Started!"
+# @app.route("/game")
+# def game():
+#     mahjongStates_vFINAL.startthegoddamnedgame()
+#     return "Game Started!"
 
 
 @app.route("/update")
@@ -181,23 +181,25 @@ def demo_page():
 
 # Testing some stuff - if its possible to show the current state on the
 # webserver
-@app.route('/yeild')
-def yeild():
-    def inner():
-        proc = subprocess.Popen(
-            # call something with a lot of output so we can see it
-            ["python", "mahjongStates_vFINAL.py"],
-            shell=False,
-            stdout=subprocess.PIPE
-        )
 
-        for line in iter(proc.stdout.readline, ''):
-            # Don't need this just shows the text streaming
-            time.sleep(1)
-            yield line.rstrip() + '<br/>\n'
 
-    # text/html is required for most browsers to show th$
-    return Response(inner(), mimetype='text/html')
+# @app.route('/yeild')
+# def yeild():
+#     def inner():
+#         proc = subprocess.Popen(
+#             # call something with a lot of output so we can see it
+#             ["python", "mahjongStates_vFINAL.py"],
+#             shell=False,
+#             stdout=subprocess.PIPE
+#         )
+
+#         for line in iter(proc.stdout.readline, ''):
+#             # Don't need this just shows the text streaming
+#             time.sleep(1)
+#             yield line.rstrip() + '<br/>\n'
+
+#     # text/html is required for most browsers to show th$
+#     return Response(inner(), mimetype='text/html')
 
 if __name__ == '__main__':
     # TODO: add algo to make the tiles here
