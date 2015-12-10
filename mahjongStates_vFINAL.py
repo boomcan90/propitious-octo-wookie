@@ -57,7 +57,13 @@ Next states:
 '''
 
 
-def game_started(inpList):
+def game_started(inpList=[]):
+
+    # inptList = resultofmessaging
+
+    if inpList == []:
+        return ("GameStarts", inpList)
+
     # Separating orientation of tiles of P1 and P2
     orientationP1 = []
     orientationP2 = []
@@ -74,8 +80,7 @@ def game_started(inpList):
         newState = 'p1TurnStart'
 
     else:
-        newState = 'Out of range'
-        print 'Error!'
+        newState = 'GameStarts'
 
     return(newState, inpList)
 
@@ -101,10 +106,12 @@ def p1_turn_start(inpList):
     inpList.extend(User1.tiles)
     inpList.extend(User2.tiles)
 
+    # begin real stuff
     orientationP1 = []
     orientationP2 = []
     listTilesP1 = []
 
+    # seperate tiles for p1 and p2
     for i in range(0, 3):
         orientationP1.append(inpList[i].orientation)
     for j in range(3, 6):
