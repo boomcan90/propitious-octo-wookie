@@ -7,8 +7,16 @@ import time
 import GcmBot
 import uuid
 
+from pubsub import pub
 
 app = Flask(__name__)
+
+
+##################################################################
+# GLOBAL OBJECTS
+##################################################################
+online_clients = []
+
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -19,7 +27,8 @@ xmpp.register_plugin('xep_0198') # Stream Management
 xmpp.register_plugin('xep_0199')  # XMPP Ping
 
 # Connect to the XMPP server and start processing XMPP stanzas.
-xmpp.startConnection()
+
+# xmpp.startConnection()
 
 
 # Keyboard Interrupt for XMPP thread
@@ -33,6 +42,22 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
+
+##################################################################
+# Subscribe to GcmBot's updates
+# 1. Like a message from android clients was received
+# 2. The sky fell
+##################################################################
+def gcm_updates(arg1, arg2=None):
+    print "gcm update: ", arg1
+    print "more info: ", arg2
+
+# function_that_wants_updates, "string"
+pub.subscribe(gcm_updates, 'clientMessageReceived')
+
+##################################################################
+# Create statemachine
+##################################################################
 
 
 
@@ -85,6 +110,14 @@ def ledsparkvar(ledstatusInt):
 
 
 ##################################################################
+# Static files
+##################################################################
+
+
+
+
+
+##################################################################
 # Example of how you would use the XMPP object to send message.
 ##################################################################
 @app.route("/gcm")
@@ -104,6 +137,21 @@ def gcmTest():
     xmpp.send_gcm_message(message)
     return "SENT MESSAGE TO ANDROID VIA GCM!"
 
+##################################################################
+# Register Client
+##################################################################
+@app.route('/api/register', methods=['POST'])
+def registerClient():
+    content = request.get_json(silent=True)
+    # if token is provided
+    # if token is not in list, add to list
+    if content.token:
+        for i in online_clients:
+            if i != content.token:
+                online_clients.append(content.token)
+    print content
+    return "Registration with: ", content
+
 
 @app.route("/game")
 def game():
@@ -115,10 +163,21 @@ def game():
 def update():
     action = request.args.get('action', '')
     if action == '':
-        action = "on"
-    PhotonCall.sendToPhoton(action)
-    return "Done! - Information Sent"
+        action = "0"
+    result = PhotonCall.sendToPhoton(action)
+    return result
 
+@app.route("/getpos")
+def get_pos():
+    pid = request.args.get('pid', '')
+    if pid == '':
+        pid = None
+    result = PhotonCall.getFromPhoton(pid)
+    return result
+
+@app.route("/photondemo")
+def demo_page():
+    return render_template('./index.html')
 
 # Testing some stuff - if its possible to show the current state on the
 # webserver

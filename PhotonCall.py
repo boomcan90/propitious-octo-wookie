@@ -13,9 +13,9 @@ def sendToPhoton(payload_for_sending):
     # VARIABLES
 
     if (payload_for_sending == ""):
-        payload_for_sending = "on"
+        payload_for_sending = "0"
 
-    PARTICLE_FUNCTION = "LED"
+    PARTICLE_FUNCTION = "tile"
     URL = "https://api.particle.io/v1/devices/"
     SLASH = "/"
     TOKEN_LABEL = "?access_token="
@@ -31,7 +31,22 @@ def sendToPhoton(payload_for_sending):
     result = requests.post(URL + PARTICLE_ID + SLASH +
                            PARTICLE_FUNCTION + TOKEN_LABEL +
                            PARTICLE_ACCESS_TOKEN, json=PAYLOAD)
-    return "finished running"
+    return result.text
+
+def getFromPhoton(pid=None):
+    print "getting from photon!"
+    if pid == None:
+        pid = PARTICLE_ID
+
+    PARTICLE_FUNCTION = "getpos"
+    URL = "https://api.particle.io/v1/devices/"
+    SLASH = "/"
+    TOKEN_LABEL = "?access_token="
+    result = requests.get(URL + pid + SLASH +
+                            PARTICLE_FUNCTION + TOKEN_LABEL + PARTICLE_ACCESS_TOKEN)
+
+    print result.text
+    return result.text
 
 if __name__ == "__main__":
     sendToPhoton()

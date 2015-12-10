@@ -20,6 +20,8 @@ from sleekxmpp.xmlstream.matcher import MatchXPath
 from sleekxmpp.xmlstream.handler import Callback
 import uuid
 
+from pubsub import pub
+
 # Python versions before 3.0 do not use UTF-8 encoding
 # by default. To ensure that Unicode is handled properly
 # throughout SleekXMPP, we will set the default encoding
@@ -40,7 +42,7 @@ PASSWORD = 'AIzaSyAXy1plvmocySlJ87_8R0Gvrr-QA9bcpOo'
 
 iot_mahjong = 'eBd2GDS1x5c:APA91bGWN57R-M7LWk-yNS-M77WDCyu_1_xNIiv2CwCbWa2KS7b6-CmL2ZcrjvI3n71606jHvnfglkaqkkXKh13NR3f4PH7-5rth8jPlc7yCCwhpP-0SnjpNP5Fix3F_IC28k-Wu6G6K'
 
-iot_mahjong_s6 = 'cX42As8_naw:APA91bF9r_m2vMLD63WCyGP8q-dkt6WpWAhyqF2WwFoZINl8pe00rHGH9Z_Tt8bZYYdg_tLxT1FQ8pyOUoT5cl35UhQmAuONKf_kTNnMzr6WdhlQdokM8_1AYcrTNURalrt5j7XLiE2s'
+iot_mahjong_s6 = 'c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF'
 
 demo_app = 'f3NRmGAh1uk:APA91bH0UDlsrdZHwntB_aAZmbgkHdDnTKHxlkhbvTr4Ask7M7TUlGgwRWTBw8xlSizF87u449vm8elgCMSWoxgbRswMJz8ompK8kXqcBQggb8ITJtijonyP4AGrKm4csIBTEkI3TPu4'
 
@@ -53,7 +55,6 @@ if (MODE == 1):
 
 
 #from sleekxmpp.plugins.xep_0199.ping import XEP_0199
-
 
 #class XEP_0199_m(XEP_0199):
 #    default_config = {
@@ -148,19 +149,16 @@ class GcmBot(sleekxmpp.ClientXMPP):
     def message_callback(self, message):
         gcm = json.loads(message.xml.find('{google:mobile:data}gcm').text)
         # print gcm
+        pub.sendMessage('clientMessageReceived', arg1=gcm, arg2="message received!")
         if gcm.get('message_type', False) in ('ack', 'receipt'):
             if gcm['message_type'] == 'ack':
-                print "########################################################"
-                print u"GCM received successfully"
+                print u"GCM received successfully but handphone may not have gotten message yet."
             if gcm.get('message_type', False) == 'receipt':
-                print "########################################################"
                 print gcm['data']['message_status']
-                print u"GCM Receipt!"
+                print u"GCM Receipt! Android handphone received the message!"
         if gcm.get('data', False) and gcm['data'].has_key('test'):
-            print "########################################################"
             print(u"has key teSt")
         if gcm.get('data', False) and gcm['data'].has_key('text'):
-            print "########################################################"
             print gcm['data']['number']+"-"+gcm['data']['text']
             print(u"has key teXt")
 
