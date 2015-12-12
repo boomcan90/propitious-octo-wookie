@@ -28,7 +28,7 @@ xmpp.register_plugin('xep_0199')  # XMPP Ping
 
 # Connect to the XMPP server and start processing XMPP stanzas.
 
-# xmpp.startConnection()
+xmpp.startConnection()
 
 
 # Keyboard Interrupt for XMPP thread
