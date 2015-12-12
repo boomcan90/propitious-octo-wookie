@@ -179,6 +179,8 @@ void loop() {
       matrix.writeDisplay();
       delay(100);
     }
+
+    photonPublishUpdates(smoothedValx, smoothedValy, smoothedValz);
     delay(200);
   } // end for loop
 
@@ -187,7 +189,7 @@ void loop() {
 
 
 // PUBLISH STUFF TO OUR SERVER
-#define publish_delay 5000
+#define publish_delay 3000
 unsigned int lastPublish = 0;
 
 
@@ -202,13 +204,13 @@ void photonPublishUpdates(float x, float y, float z) {
     }
 
     payload = payload + "{";
-    payload = payload + "\"endpoint\": \"photonUpdate\","
-    payload = payload + "\"x\":\"" + String(x) + "\","
-    payload = payload + "\"y\":\"" + String(y) + "\","
-    payload = payload + "\"z\":\"" + String(z) + "\","
-    payload = payload + "\"orientation\":\"" + String(pos) + "\","
-    payload = payload + "\"tile\":\"" + String(shapeIdx) + "\","
-    payload = payload + "\"timestamp\":\"" + String(now) + "\""
+    payload = payload + "\"endpoint\": \"photonUpdate\",";
+    payload = payload + "\"x\":\"" + String(x) + "\",";
+    payload = payload + "\"y\":\"" + String(y) + "\",";
+    payload = payload + "\"z\":\"" + String(z) + "\",";
+    payload = payload + "\"orientation\":\"" + String(pos) + "\",";
+    payload = payload + "\"tile\":\"" + String(shapeIdx) + "\",";
+    payload = payload + "\"timestamp\":\"" + String(now) + "\"";
     payload = payload + "}";
 
     Spark.publish("custom_publish_event", payload, 60, PRIVATE);

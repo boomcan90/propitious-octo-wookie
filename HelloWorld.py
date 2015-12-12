@@ -12,9 +12,7 @@ import os
 import redis
 import json
 
-#Redis
-r = redis.from_url(os.environ.get("REDIS_URL"))
-r.set('temp_photon_data', 'nothing yet');
+
 
 #Publish subscribe
 from pubsub import pub
@@ -24,13 +22,22 @@ app = Flask(__name__)
 ##################################################################
 # GLOBAL OBJECTS
 ##################################################################
-online_clients = []
+#Redis
+r = redis.from_url(os.environ.get("REDIS_URL"))
+r.set('temp_photon_data', 'nothing yet')
 
-user1_update_count = 0
-user2_update_count = 0
 
-user1_tiles = None
-user2_tiles = None
+#Hacky user management and tiles
+r.set('online_clients', 0)
+
+r.set('user1_tiles_update_count', json.dumps([]))
+r.set('user2_tiles_update_count', json.dumps([]))
+
+# orange
+user1_tiles = ["250040000347343337373737", "2b002d000447343233323032", "3b003d000347343339373536"]
+# green
+user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c001347343432313031"]
+
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -70,7 +77,7 @@ def gcm_updates(arg1, arg2=None):
 pub.subscribe(gcm_updates, 'clientMessageReceived')
 
 ##################################################################
-# Photon updates
+# PHOTON UPDATES
 ##################################################################
 @app.route('/photonUpdate', methods=['POST'])
 def photonUpdate():
@@ -90,12 +97,6 @@ def photonLastestUpdate():
 
 
 ##################################################################
-# Create statemachine
-##################################################################
-
-
-
-##################################################################
 # ROUTING
 ##################################################################
 @app.route('/')
@@ -104,6 +105,9 @@ def main():
     return render_template('./sparktemplate.html', tempdata=1, utimedata=1,
                            ledstatus=1, authbool=True)
 
+##################################################################
+# PARTICLE LED TEST
+##################################################################
 @app.route('/dataNow')
 def DataNow():
     dataDict = sparkfunction.VarUpdate("delimOT")
