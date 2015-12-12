@@ -75,23 +75,18 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 @app.route('/photonUpdate', methods=['POST'])
 def photonUpdate():
     content = request.get_json(silent=True, force=True)
+    #remove the additional property particle servers provide
     content.pop("data", None)
-    print content
-    print "json dump\n"
-    print json.dumps(content)
-    print "\n"
     r.set('temp_photon_data', json.dumps(content))
-    print "json load\n"
-    print json.loads(r.get('temp_photon_data'))
-    print "\n"
     return "ok"
 
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
-    resp = Response(response=json.loads(r.get('temp_photon_data')),
+    print r.get('temp_photon_data')
+    resp = Response(response=r.get('temp_photon_data')),
     status=200, \
     mimetype="application/json")
-    return r.get('temp_photon_data')
+    return resp
 
 
 ##################################################################
