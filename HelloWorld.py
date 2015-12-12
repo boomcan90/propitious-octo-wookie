@@ -8,6 +8,10 @@ import time
 import gcm_bot
 import uuid
 
+# Database
+from flask.ext.zodb import ZODB
+
+#Publish subscribe
 from pubsub import pub
 
 app = Flask(__name__)
@@ -15,7 +19,7 @@ app = Flask(__name__)
 
 ##################################################################
 # GLOBAL OBJECTS
-##################################################################z
+##################################################################
 online_clients = []
 
 user1_update_count = 0
@@ -23,6 +27,9 @@ user2_update_count = 0
 
 user1_tiles = None
 user2_tiles = None
+
+app.config['ZODB_STORAGE'] = 'file://app.fs'
+db = ZODB(app)
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -64,20 +71,19 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 ##################################################################
 # Photon updates
 ##################################################################
-temp_photon_data = "nothing";
 @app.route('/photonUpdate', methods=['POST'])
 def photonUpdate():
     content = request.get_json(silent=True, force=True)
-    temp_photon_data = content
+    db['temp_photon_data'] = content
     print content
-    resp = Response(response=temp_photon_data,
+    resp = Response(response=db.get('temp_photon_data', 'nothing yet...'),
     status=200, \
     mimetype="application/json")
     return resp
 
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
-    resp = Response(response=temp_photon_data,
+    resp = Response(response=db.get('temp_photon_data', 'nothing yet...'),
     status=200, \
     mimetype="application/json")
     return resp
