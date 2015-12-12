@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, session, Response
 import sparkfunction
 import photon_call
+from mahjong_stm_objects import *
 import mahjong_stm_main
 import subprocess
 import time
@@ -17,6 +18,11 @@ app = Flask(__name__)
 ##################################################################z
 online_clients = []
 
+user1_update_count = 0
+user2_update_count = 0
+
+user1_tiles = None
+user2_tiles = None
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -54,6 +60,16 @@ def gcm_updates(arg1, arg2=None):
 
 # function_that_wants_updates, "string"
 pub.subscribe(gcm_updates, 'clientMessageReceived')
+
+##################################################################
+# Photon updates
+##################################################################
+@app.route('/photoUpdate', methods=['POST'])
+def photonUpdate():
+    content = request.get_json(silent=True, Force=True)
+    return content
+
+
 
 ##################################################################
 # Create statemachine

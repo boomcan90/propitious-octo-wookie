@@ -1,0 +1,15 @@
+{
+    "event": "custom_publish_event",
+    "url": "https://intense-caverns-6032.herokuapp.com/{{endpoint}}",
+    "requestType": "POST",
+    "json": {
+        "x": "{{x}}",
+        "y": "{{y}}",
+        "z": "{{z}}",
+        "orientation": "{{orientation}}",
+        "tile": "{{tile}}",
+        "timestamp": "{{timestamp}}",
+        "source": "{{SPARK_CORE_ID}}"
+    },
+    "mydevices": true
+}
