@@ -1,3 +1,5 @@
+import json
+
 '''
 Tile class:
 Has attributes:
@@ -8,11 +10,20 @@ Has attributes:
 
 class Tile:
 
-    def __init__(self, orientation, kind=None, last_updated=None):
+    def __init__(self, orientation=None, x=None, y=None, z=None, kind=None, last_updated=None, token=None):
         self.orientation = orientation
         self.kind = kind
+        self.token = token
+        self.x = x
+        self.y = y
+        self.z = z
         self.last_updated = last_updated
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+            sort_keys=True, indent=4)
 
+    def __repr__(self):
+        return json.dumps(self.__dict__)
 ###################################################################################################################################
 
 '''

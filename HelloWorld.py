@@ -11,8 +11,7 @@ import redis
 import os
 import redis
 import json
-
-
+import jsonpickle
 
 #Publish subscribe
 from pubsub import pub
@@ -30,14 +29,24 @@ r.set('temp_photon_data', 'nothing yet')
 #Hacky user management and tiles
 r.set('online_clients', 0)
 
-r.set('user1_tiles_update_count', json.dumps([]))
-r.set('user2_tiles_update_count', json.dumps([]))
+r.set('user1_live_tiles', jsonpickle.dumps({}))
+r.set('user2_live_tiles', jsonpickle.dumps({}))
 
 # orange
 user1_tiles = ["250040000347343337373737", "2b002d000447343233323032", "3b003d000347343339373536"]
 # green
 user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c001347343432313031"]
 
+temp_user_tiles = {}
+
+
+for token in user1_tiles:
+    temp_user_tiles[token] = Tile(token=token)
+r.set('user1_live_tiles', jsonpickle.dumps(temp_user_tiles))
+
+for token in user2_tiles:
+    temp_user_tiles[token] = {}
+r.set('use2_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -79,18 +88,52 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 ##################################################################
 # PHOTON UPDATES
 ##################################################################
+
+def tileUpdateHandler(tile_data):
+    tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
+    tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
+
+    if "source" in tile_data:
+        if tile_data.source in tiles1:
+            tiles1[tile_data.source].orientation = tile_data.orientation
+            tiles1[tile_data.source].kind = tile_data.tile # update tile kind with "tile from photon"
+            tiles1[tile_data.source].x = tile_data.x
+            tiles1[tile_data.source].y = tile_data.y
+            tiles1[tile_data.source].z = tile_data.z
+            r.set('user1_live_tiles', jsonpickle.dumps(tiles1))
+
+            if tiles1[tile_data.source].orientation != tile_data.orientation:
+                #updates
+                pass
+
+        else if tile_data.source in tiles2:
+            tiles2[tile_data.source].orientation = tile_data.orientation
+            tiles2[tile_data.source].kind = tile_data.tile # update tile kind with "tile from photon"
+            tiles2[tile_data.source].x = tile_data.x
+            tiles2[tile_data.source].y = tile_data.y
+            tiles2[tile_data.source].z = tile_data.z
+            r.set('user2_live_tiles', jsonpickle.dumps(tiles2))
+            if tiles1[tile_data.source].orientation != tile_data.orientation:
+                #updates
+                pass
+        else:
+            print "error occurred while processing tile data"
+
 @app.route('/photonUpdate', methods=['POST'])
 def photonUpdate():
     content = request.get_json(silent=True, force=True)
-    #remove the additional property particle servers provide
+    # remove the additional property particle servers provide
     content.pop("data", None)
     r.set('temp_photon_data', json.dumps(content))
+
+    # more updating to be done
+    tileUpdateHandler(content)
     return "ok"
 
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
-    print r.get('temp_photon_data')
-    resp = Response(response=r.get('temp_photon_data'),
+    print r.get('user1_live_tiles')
+    resp = Response(response=r.get('user1_live_tiles'),
     status=200, \
     mimetype="application/json")
     return resp
