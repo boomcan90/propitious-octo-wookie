@@ -64,11 +64,16 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 ##################################################################
 # Photon updates
 ##################################################################
+temp_photon_data = None;
 @app.route('/photoUpdate', methods=['POST'])
 def photonUpdate():
     content = request.get_json(silent=True, Force=True)
     print content
     return content
+
+@app.route('/latestPhotonUpdate', methods=['GET'])
+def photonLastestUpdate():
+    return temp_photon_data
 
 
 
