@@ -94,7 +94,7 @@ def tileUpdateHandler(tile_data):
     print "got tiles"
     if "source" in tile_data:
         print "source"
-        if tile_data["source"] in tiles1:
+        if tile_data["source"] in user1_tiles:
             print "updating tiles1"
             tiles1[tile_data["source"]].orientation = tile_data["orientation"]
             tiles1[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
@@ -107,7 +107,7 @@ def tileUpdateHandler(tile_data):
                 #updates
                 pass
 
-        elif tile_data["source"] in tiles2:
+        elif tile_data["source"] in user2_tiles:
             print "updating tiles2"
             tiles2[tile_data["source"]].orientation = tile_data["orientation"]
             tiles2[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
@@ -116,7 +116,7 @@ def tileUpdateHandler(tile_data):
             tiles2[tile_data["source"]].z = tile_data["z"]
             r.set('user2_live_tiles', jsonpickle.dumps(tiles2))
             print "done with tiles2"
-            if tiles1[tile_data["source"]].orientation != tile_data["orientation"]:
+            if tiles2[tile_data["source"]].orientation != tile_data["orientation"]:
                 #updates
                 pass
         else:
