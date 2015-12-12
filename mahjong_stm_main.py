@@ -28,14 +28,14 @@ listOfTiles = randomTileGen(100)
 
 # Assigning tiles to the three tile objects in each user object.
 for i in User1.tiles:
-    i.whoami = listOfTiles[0]
+    i.kind = listOfTiles[0]
     listOfTiles.remove(listOfTiles[0])
-    print i.whoami
+    print i.kind
 
 for j in User2.tiles:
-    j.whoami = listOfTiles[0]
+    j.kind = listOfTiles[0]
     listOfTiles.remove(listOfTiles[0])
-    print j.whoami
+    print j.kind
 
 ##########################################################################
 # ASSUMING THAT P1 IS USER 1.
@@ -118,7 +118,7 @@ def p1_turn_start(inpList):
         orientationP2.append(inpList[j].orientation)
 
     for i in range(0, 3):
-        listTilesP1.append(inpList[i].whoami)
+        listTilesP1.append(inpList[i].kind)
 
     # Now, if all tiles of p1 are up, it means that it must go to p1_turn_end
     if(orientationP1.count('up') == 3):
@@ -142,9 +142,11 @@ def p1_turn_end(inpList):
     orientationP2 = []
     listTilesP1 = []
 
+    print "in p1 end"
+
     # Creating 3 tiles for user 1
     Tile1_1 = Tile('up')
-    Tile1_2 = Tile('down')
+    Tile1_2 = Tile('up')
     Tile1_3 = Tile('up')
     User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
 
@@ -164,7 +166,7 @@ def p1_turn_end(inpList):
         orientationP2.append(inpList[j].orientation)
 
     for i in range(0, 3):
-        listTilesP1.append(inpList[i].whoami)
+        listTilesP1.append(inpList[i].kind)
 
     if (orientationP1.count('up') == 2):
         print 'p2 turn'
@@ -206,7 +208,7 @@ def p2_turn_start(inpList):
         orientationP2.append(inpList[j].orientation)
 
     for i in range(3, 6):
-        listTilesP2.append(inpList[i].whoami)
+        listTilesP2.append(inpList[i].kind)
 
     # Now, if all tiles of p1 are up, it means that it must go to p1_turn_end
     if(orientationP2.count('up') == 3):

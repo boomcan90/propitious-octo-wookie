@@ -1,7 +1,7 @@
 import random
 import itertools
 
-''' 
+'''
 TILES:
 Number tiles: '1'....'9'
 Circle tiles: c1.....c9
@@ -10,7 +10,7 @@ Wind suit: N, S, E, W
 '''
 
 
-tiles = [] 
+tiles = []
 numberTiles = []
 circleTiles = []
 windTiles = []
@@ -89,7 +89,7 @@ turnP1: Draws 1 tile.Flips 1 down (discards it if tiles are not suitable for win
 turnP2: Chooses to take the discarded tile or draws a new one. Discards 1 if tiles are not suitable for winning
 
 #TODO:
-1. Random tile generator function. 
+1. Random tile generator function.
 2. Check if a player has won
 '''
 #########################################################
@@ -97,7 +97,7 @@ turnP2: Chooses to take the discarded tile or draws a new one. Discards 1 if til
 '''
 FUNCTION 1: GENERATES RANDOM TILES
 Basically takes a number of tiles to generate(numTiles) and generates them.
-Makes sure that tiles generated are in the tiles set. 
+Makes sure that tiles generated are in the tiles set.
 **tile can repeat 4 times
 '''
 def randomTileGen(numTiles):
@@ -117,7 +117,7 @@ def randomTileGen(numTiles):
 ########################################################
 
 '''
-FUNCTION 2: CHECK IF PLAYER HAS WON 
+FUNCTION 2: CHECK IF PLAYER HAS WON
 Here, checks if tiles that player has form a winning combination
 '''
 
