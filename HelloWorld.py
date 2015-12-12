@@ -67,6 +67,7 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 @app.route('/photoUpdate', methods=['POST'])
 def photonUpdate():
     content = request.get_json(silent=True, Force=True)
+    print content
     return content
 
 
