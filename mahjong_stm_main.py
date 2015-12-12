@@ -5,35 +5,35 @@ from statemachine import StateMachine
 ##########################################################################
 '''INITIALISATION'''
 # importing winning combinations
-localWinningCombinations = winningCombinations
+# localWinningCombinations = winningCombinations
 
 # Creating user objects
-User1 = User('User1')
-User2 = User('User2')
+# User1 = User('User1')
+# User2 = User('User2')
 
 # Creating 3 tiles for user 1
-Tile1_1 = Tile('down')
-Tile1_2 = Tile('up')
-Tile1_3 = Tile('up')
-User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
+# Tile1_1 = Tile('down')
+# Tile1_2 = Tile('up')
+# Tile1_3 = Tile('up')
+# User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
 
 # Creating 3 tiles for user 2
-Tile2_1 = Tile('down')
-Tile2_2 = Tile('down')
-Tile2_3 = Tile('down')
-User2.tiles = [Tile2_1, Tile2_2, Tile2_3]
+# Tile2_1 = Tile('down')
+# Tile2_2 = Tile('down')
+# Tile2_3 = Tile('down')
+# User2.tiles = [Tile2_1, Tile2_2, Tile2_3]
 
 # Generating list of tiles.
 listOfTiles = randomTileGen(100)
 
 # Assigning tiles to the three tile objects in each user object.
-for i in User1.tiles:
-    i.kind = listOfTiles[0]
-    listOfTiles.remove(listOfTiles[0])
+# for i in User1.tiles:
+#     i.kind = listOfTiles[0]
+#     listOfTiles.remove(listOfTiles[0])
 
-for j in User2.tiles:
-    j.kind = listOfTiles[0]
-    listOfTiles.remove(listOfTiles[0])
+# for j in User2.tiles:
+#     j.kind = listOfTiles[0]
+#     listOfTiles.remove(listOfTiles[0])
 
 ##########################################################################
 # ASSUMING THAT P1 IS USER 1.
