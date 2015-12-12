@@ -57,9 +57,10 @@ Next states:
 '''
 
 
-def game_started(inpList):
+#statemachine should subscribe to updates from photon (which would be every 2 seconds)
+#somehow the updates need to be passed on to the states
 
-    # inptList = resultofmessaging
+def game_started(inpList):
 
     if inpList == []:
         return ("GameStarts", inpList)
@@ -146,7 +147,7 @@ def p1_turn_end(inpList):
 
     # Creating 3 tiles for user 1
     Tile1_1 = Tile('up')
-    Tile1_2 = Tile('up')
+    Tile1_2 = Tile('down')
     Tile1_3 = Tile('up')
     User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
 

@@ -14,14 +14,14 @@ app = Flask(__name__)
 
 ##################################################################
 # GLOBAL OBJECTS
-##################################################################
+##################################################################z
 online_clients = []
 
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
 ##################################################################
-xmpp = gcm_bot.GcmBot(GcmBot.USERNAME, GcmBot.PASSWORD)
+xmpp = gcm_bot.GcmBot(gcm_bot.USERNAME, gcm_bot.PASSWORD)
 xmpp.register_plugin('xep_0184') # Message Delivery Receipts
 xmpp.register_plugin('xep_0198') # Stream Management
 xmpp.register_plugin('xep_0199')  # XMPP Ping
@@ -179,8 +179,8 @@ def demo_page():
 
 # Testing some stuff - if its possible to show the current state on the
 # webserver
-@app.route('/yield')
-def yeild():
+@app.route('/yieldd')
+def yieldd():
     def inner():
         proc = subprocess.Popen(
             # call something with a lot of output so we can see it
