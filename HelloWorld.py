@@ -83,7 +83,7 @@ def photonUpdate():
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
     print r.get('temp_photon_data')
-    resp = Response(response=r.get('temp_photon_data')),
+    resp = Response(response=r.get('temp_photon_data'),
     status=200, \
     mimetype="application/json")
     return resp
