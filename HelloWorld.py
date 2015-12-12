@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, url_for, redirect, session, Response
 import sparkfunction
-import PhotonCall
-import mahjongStates_vFINAL
+import photon_call
+import mahjong_stm_main
 import subprocess
 import time
-import GcmBot
+import gcm_bot
 import uuid
 
 from pubsub import pub
@@ -21,7 +21,7 @@ online_clients = []
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
 ##################################################################
-xmpp = GcmBot.GcmBot(GcmBot.USERNAME, GcmBot.PASSWORD)
+xmpp = gcm_bot.GcmBot(GcmBot.USERNAME, GcmBot.PASSWORD)
 xmpp.register_plugin('xep_0184') # Message Delivery Receipts
 xmpp.register_plugin('xep_0198') # Stream Management
 xmpp.register_plugin('xep_0199')  # XMPP Ping
@@ -110,14 +110,6 @@ def ledsparkvar(ledstatusInt):
 
 
 ##################################################################
-# Static files
-##################################################################
-
-
-
-
-
-##################################################################
 # Example of how you would use the XMPP object to send message.
 ##################################################################
 @app.route("/gcm")
@@ -153,12 +145,18 @@ def registerClient():
     return "Registration with: ", content
 
 
+##################################################################
+# Trial of starting the game
+##################################################################
 @app.route("/game")
 def game():
     mahjongStates_vFINAL.startthegoddamnedgame()
     return "Game Started!"
 
 
+##################################################################
+# Register Client
+##################################################################
 @app.route("/update")
 def update():
     action = request.args.get('action', '')
@@ -181,7 +179,7 @@ def demo_page():
 
 # Testing some stuff - if its possible to show the current state on the
 # webserver
-@app.route('/yeild')
+@app.route('/yield')
 def yeild():
     def inner():
         proc = subprocess.Popen(

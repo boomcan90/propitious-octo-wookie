@@ -1,5 +1,5 @@
-from pythonMahjong import *
-from MahjongFunctions import *
+from mahjong_stm_objects import *
+from mahjong_stm_util import *
 from statemachine import StateMachine
 
 ##########################################################################
@@ -58,6 +58,12 @@ Next states:
 
 
 def game_started(inpList):
+
+    # inptList = resultofmessaging
+
+    if inpList == []:
+        return ("GameStarts", inpList)
+
     # Separating orientation of tiles of P1 and P2
     orientationP1 = []
     orientationP2 = []
@@ -74,8 +80,7 @@ def game_started(inpList):
         newState = 'p1TurnStart'
 
     else:
-        newState = 'Out of range'
-        print 'Error!'
+        newState = 'GameStarts'
 
     return(newState, inpList)
 
@@ -101,10 +106,12 @@ def p1_turn_start(inpList):
     inpList.extend(User1.tiles)
     inpList.extend(User2.tiles)
 
+    # begin real stuff
     orientationP1 = []
     orientationP2 = []
     listTilesP1 = []
 
+    # seperate tiles for p1 and p2
     for i in range(0, 3):
         orientationP1.append(inpList[i].orientation)
     for j in range(3, 6):
@@ -118,14 +125,14 @@ def p1_turn_start(inpList):
         print 'going to p1END'
         newState = 'p1TurnEnd'
 
+    # Else, stay in same state
+    else:
+        newState = 'p1TurnStart'
+
     # Check if p1 has won:
     if(listTilesP1 in localWinningCombinations):
         print 'p1 win state'
         newState = 'p1Win'
-
-    # Else, stay in same state
-    else:
-        newState = 'p1TurnStart'
 
     return(newState, inpList)
 
@@ -206,14 +213,14 @@ def p2_turn_start(inpList):
         print 'p2 turn end'
         newState = 'p2TurnEnd'
 
+     # Else, stay in same state
+    else:
+        newState = 'p2TurnStart'
+
     # Check if p1 has won:
     if(listTilesP2 in localWinningCombinations):
         print 'p2 win'
         newState = 'p2Win'
-
-    # Else, stay in same state
-    else:
-        newState = 'p2TurnStart'
 
     return(newState, inpList)
 
@@ -238,21 +245,16 @@ def p2_turn_end(inpList):
 
 def p1_win(inpList):
     print 'player 1 wins!'
-    newState = 'game_end'
+    newState = 'Game_Over'
 
     return(newState, inpList)
 
 
 def p2_win(inpList):
     print 'player 2 wins!'
-    newState = 'game_end'
+    newState = 'Game_Over'
 
     return(newState, inpList)
-
-
-def game_end(inpList):
-    print 'End of game!'
-    return None
 
 
 ##########################################################################
@@ -261,7 +263,8 @@ allTiles = []
 allTiles.extend(User1.tiles)
 allTiles.extend(User2.tiles)
 
-if __name__ == "__main__":
+
+def startthegoddamnedgame():
     m = StateMachine()
     m.add_state("GameStarts", game_started)
     m.add_state("p1TurnStart", p1_turn_start)
@@ -270,7 +273,10 @@ if __name__ == "__main__":
     m.add_state("p2TurnEnd", p2_turn_end)
     m.add_state("p1Win", p1_win)
     m.add_state("p2Win", p2_win)
-    m.add_state("GameOver", game_end)
-    m.add_state("Out of range", None, end_state=1)
+    m.add_state("Game_Over", None, end_state=1)
     m.set_start("GameStarts")
     m.run(allTiles)
+
+
+if __name__ == "__main__":
+    startthegoddamnedgame()
