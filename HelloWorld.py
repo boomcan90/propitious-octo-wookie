@@ -32,9 +32,9 @@ r.set('online_clients', 0)
 r.set('user1_live_tiles', jsonpickle.dumps({}))
 r.set('user2_live_tiles', jsonpickle.dumps({}))
 
-# orange
+# orange: pirate, morphing, zombie
 user1_tiles = ["250040000347343337373737", "2b002d000447343233323032", "3b003d000347343339373536"]
-# green
+# green: raptor, hunter, dentist
 user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c001347343432313031"]
 
 temp_user_tiles = {}
@@ -88,6 +88,7 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 # PHOTON UPDATES
 ##################################################################
 
+# Handles each tile's update and sets it in redis (triplets)
 def tileUpdateHandler(tile_data):
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
