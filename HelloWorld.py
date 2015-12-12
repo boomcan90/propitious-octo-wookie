@@ -106,7 +106,7 @@ def tileUpdateHandler(tile_data):
                 #updates
                 pass
 
-        else if tile_data.source in tiles2:
+        elif tile_data.source in tiles2:
             tiles2[tile_data.source].orientation = tile_data.orientation
             tiles2[tile_data.source].kind = tile_data.tile # update tile kind with "tile from photon"
             tiles2[tile_data.source].x = tile_data.x
@@ -231,7 +231,7 @@ def registerClient():
 ##################################################################
 @app.route("/game")
 def game():
-    mahjongStates_vFINAL.startthegoddamnedgame()
+    # mahjongStates_vFINAL.startthegoddamnedgame()
     return "Game Started!"
 
 
