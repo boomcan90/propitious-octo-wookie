@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect, session, R
 import sparkfunction
 import photon_call
 from mahjong_stm_objects import *
-import mahjong_stm_main
+# import mahjong_stm_main
 import subprocess
 import time
 import gcm_bot
@@ -39,13 +39,12 @@ user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c00
 
 temp_user_tiles = {}
 
-
 for token in user1_tiles:
     temp_user_tiles[token] = Tile(token=token)
 r.set('user1_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
 for token in user2_tiles:
-    temp_user_tiles[token] = {}
+    temp_user_tiles[token] = Tile(token=token)
 r.set('use2_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
 ##################################################################
@@ -92,28 +91,32 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 def tileUpdateHandler(tile_data):
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
-
+    print "got tiles"
     if "source" in tile_data:
-        if tile_data.source in tiles1:
-            tiles1[tile_data.source].orientation = tile_data.orientation
-            tiles1[tile_data.source].kind = tile_data.tile # update tile kind with "tile from photon"
-            tiles1[tile_data.source].x = tile_data.x
-            tiles1[tile_data.source].y = tile_data.y
-            tiles1[tile_data.source].z = tile_data.z
+        print "source"
+        if tile_data["source"] in tiles1:
+            print "updating tiles1"
+            tiles1[tile_data["source"]].orientation = tile_data["orientation"]
+            tiles1[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
+            tiles1[tile_data["source"]].x = tile_data["x"]
+            tiles1[tile_data["source"]].y = tile_data["y"]
+            tiles1[tile_data["source"]].z = tile_data["z"]
             r.set('user1_live_tiles', jsonpickle.dumps(tiles1))
-
-            if tiles1[tile_data.source].orientation != tile_data.orientation:
+            print "done with tiles1"
+            if tiles1[tile_data["source"]].orientation != tile_data["orientation"]:
                 #updates
                 pass
 
-        elif tile_data.source in tiles2:
-            tiles2[tile_data.source].orientation = tile_data.orientation
-            tiles2[tile_data.source].kind = tile_data.tile # update tile kind with "tile from photon"
-            tiles2[tile_data.source].x = tile_data.x
-            tiles2[tile_data.source].y = tile_data.y
-            tiles2[tile_data.source].z = tile_data.z
+        elif tile_data["source"] in tiles2:
+            print "updating tiles2"
+            tiles2[tile_data["source"]].orientation = tile_data["orientation"]
+            tiles2[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
+            tiles2[tile_data["source"]].x = tile_data["x"]
+            tiles2[tile_data["source"]].y = tile_data["y"]
+            tiles2[tile_data["source"]].z = tile_data["z"]
             r.set('user2_live_tiles', jsonpickle.dumps(tiles2))
-            if tiles1[tile_data.source].orientation != tile_data.orientation:
+            print "done with tiles2"
+            if tiles1[tile_data["source"]].orientation != tile_data["orientation"]:
                 #updates
                 pass
         else:
@@ -124,6 +127,7 @@ def photonUpdate():
     content = request.get_json(silent=True, force=True)
     # remove the additional property particle servers provide
     content.pop("data", None)
+    print content
     r.set('temp_photon_data', json.dumps(content))
 
     # more updating to be done

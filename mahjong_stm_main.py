@@ -30,12 +30,10 @@ listOfTiles = randomTileGen(100)
 for i in User1.tiles:
     i.kind = listOfTiles[0]
     listOfTiles.remove(listOfTiles[0])
-    print i.kind
 
 for j in User2.tiles:
     j.kind = listOfTiles[0]
     listOfTiles.remove(listOfTiles[0])
-    print j.kind
 
 ##########################################################################
 # ASSUMING THAT P1 IS USER 1.
