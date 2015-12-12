@@ -7,13 +7,19 @@ import subprocess
 import time
 import gcm_bot
 import uuid
+import redis
+import os
+import redis
+import json
 
+#Redis
+r = redis.from_url(os.environ.get("REDIS_URL"))
+redis.set('temp_photon_data', 'nothing yet');
 
 #Publish subscribe
 from pubsub import pub
 
 app = Flask(__name__)
-
 
 ##################################################################
 # GLOBAL OBJECTS
@@ -69,16 +75,16 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 @app.route('/photonUpdate', methods=['POST'])
 def photonUpdate():
     content = request.get_json(silent=True, force=True)
-    db['temp_photon_data'] = content
     print content
-    resp = Response(response=db.get('temp_photon_data', 'nothing yet...'),
+    redis.set('temp_photon_data', json.dumps(content))
+    resp = Response(response=redis.get('temp_photon_data'),
     status=200, \
     mimetype="application/json")
     return resp
 
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
-    resp = Response(response=db.get('temp_photon_data', 'nothing yet...'),
+    resp = Response(response=json.loads(redis.get('temp_photon_data')),
     status=200, \
     mimetype="application/json")
     return resp
