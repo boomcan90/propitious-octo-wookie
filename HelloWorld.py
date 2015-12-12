@@ -42,7 +42,7 @@ xmpp.register_plugin('xep_0199')  # XMPP Ping
 
 # Connect to the XMPP server and start processing XMPP stanzas.
 
-xmpp.startConnection()
+# xmpp.startConnection()
 
 
 # Keyboard Interrupt for XMPP thread
@@ -76,6 +76,9 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 def photonUpdate():
     content = request.get_json(silent=True, force=True)
     print content
+    print "json dump\n"
+    print json.dumps(content)
+    print "\n"
     r.set('temp_photon_data', json.dumps(content))
     resp = Response(response=r.get('temp_photon_data'),
     status=200, \
