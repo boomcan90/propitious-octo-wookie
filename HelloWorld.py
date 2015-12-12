@@ -14,7 +14,7 @@ import json
 
 #Redis
 r = redis.from_url(os.environ.get("REDIS_URL"))
-redis.set('temp_photon_data', 'nothing yet');
+r.set('temp_photon_data', 'nothing yet');
 
 #Publish subscribe
 from pubsub import pub
@@ -76,15 +76,15 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 def photonUpdate():
     content = request.get_json(silent=True, force=True)
     print content
-    redis.set('temp_photon_data', json.dumps(content))
-    resp = Response(response=redis.get('temp_photon_data'),
+    r.set('temp_photon_data', json.dumps(content))
+    resp = Response(response=r.get('temp_photon_data'),
     status=200, \
     mimetype="application/json")
     return resp
 
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
-    resp = Response(response=json.loads(redis.get('temp_photon_data')),
+    resp = Response(response=json.loads(r.get('temp_photon_data')),
     status=200, \
     mimetype="application/json")
     return resp
