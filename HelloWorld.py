@@ -22,7 +22,7 @@ app = Flask(__name__)
 # GLOBAL OBJECTS
 ##################################################################
 #Redis
-r = redis.from_url(os.environ.get("REDIS_URL"))
+r = redis.from_url(os.environ.get("HEROKU_REDIS_MAUVE_URL"))
 r.set('temp_photon_data', 'nothing yet')
 
 
