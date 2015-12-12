@@ -8,8 +8,6 @@ import time
 import gcm_bot
 import uuid
 
-# Database
-from flask.ext.zodb import ZODB
 
 #Publish subscribe
 from pubsub import pub
@@ -27,9 +25,6 @@ user2_update_count = 0
 
 user1_tiles = None
 user2_tiles = None
-
-app.config['ZODB_STORAGE'] = 'file://app.fs'
-db = ZODB(app)
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
