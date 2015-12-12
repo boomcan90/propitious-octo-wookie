@@ -79,7 +79,7 @@ def photonUpdate():
     print "json dump\n"
     print json.dumps(content)
     print "\n"
-    r.set('temp_photon_data', json.dumps(content))\
+    r.set('temp_photon_data', json.dumps(content))
     print "json load\n"
     print json.loads(r.get('temp_photon_data'))
     print "\n"
