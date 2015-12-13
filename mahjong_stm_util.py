@@ -79,7 +79,7 @@ winningCombinations.extend(winningComboNumber)
 winningCombinations.extend(winningComboCircle)
 
 
-print winningCombinations	#to win
+# print winningCombinations	#to win
 
 ########################################################
 
@@ -114,7 +114,7 @@ def randomTileGen(numTiles):
 
 	return tilesGenerated
 
-# print randomTileGen(2)
+print randomTileGen(100)
 
 ########################################################
 

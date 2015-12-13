@@ -207,6 +207,7 @@ def p2_update(tiles, extra=None):
 class Mahjong(object):
     pass
 
+tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', 'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8', 'circle_9', 'number_1', 'number_2', 'number_3', 'number_4', 'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
 
 def send_p1_tile():
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
@@ -244,6 +245,15 @@ def start_the_game():
 
     # assign tiles
     # send to photon
+    for i in range(3):
+        photon_token = user1_tiles[i]
+        tile_to_send = tiles[listOfTiles.pop()]
+        photon_call.send_tile(tile=tile_to_send, token=photon_token)
+
+    for i in range(3):
+        photon_token = user2_tiles[i]
+        tile_to_send = tiles[listOfTiles.pop()]
+        photon_call.send_tile(tile=tile_to_send, token=photon_token)
 
 
     # setup machine
@@ -273,6 +283,7 @@ def start_the_game():
 ## subscribe for events early
 pub.subscribe(p1_update, 'p1_update')
 pub.subscribe(p2_update, 'p2_update')
+start_the_game()
 
 # On android app, play game button should trigger this
 @app.route('/joingame', methods=['POST', 'GET'])
