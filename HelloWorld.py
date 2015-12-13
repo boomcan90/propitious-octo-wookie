@@ -115,6 +115,9 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 ##################################################################
 # GAMEPLAY
 ##################################################################
+#
+# Sigh this really should be done better as an object
+#
 from transitions import Machine
 def parseTileOrientation(tiles_dict):
     orientationList = []
