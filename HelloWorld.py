@@ -138,7 +138,7 @@ def parseTileKind(tiles_dict):
 
 ##########################################################################
 
-def player_update(tiles, extra=None):
+def player_update(tiles=None, extra=None):
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
     tiles1 = parseTileOrientation(tiles1)
@@ -155,7 +155,6 @@ def player_update(tiles, extra=None):
         if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             # check for both p1 and p2
             # then got goto p1
-            app.logger.debug("starting state TRYING to move on to p1 start")
             mahjong_game.goto_p1_start()
     elif mahjong_game.state == "p1_start":
         app.logger.debug("P1 START STATE HOORAYYYY")
@@ -189,34 +188,102 @@ tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', '
 
 class Mahjong(object):
     def send_p1_tile(self):
-        pass
-        # tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
-        # for key, value in tiles1.iteritems():
-        #     if value.orientation == "0":
-        #         # send to photon a new tile
-        #         # provide tile tokenid and extract new tile from list
-        #         break
+        message = {
+            "to": gcm_bot.iot_mahjong_s6,
+            "message_id": uuid.uuid1().urn[9:],
+            "data":
+                {
+                    "message": "DRAW"
+                },
+            "time_to_live": 600,
+            "delay_while_idle": True,
+            "delivery_receipt_requested": True
+        }
+        xmpp.send_gcm_message(message)
+        message = {
+            "to": gcm_bot.iot_mahjong,
+            "message_id": uuid.uuid1().urn[9:],
+            "data":
+                {
+                    "message": "WAIT"
+                },
+            "time_to_live": 600,
+            "delay_while_idle": True,
+            "delivery_receipt_requested": True
+        }
+        xmpp.send_gcm_message(message)
 
     def tell_p1_discard(self):
         # tell p1 to discard a tile by flipping tile
         # sendMessage(message="discard")
         # client should process and show relevant thing
-        pass
+        message = {
+            "to": gcm_bot.iot_mahjong_s6,
+            "message_id": uuid.uuid1().urn[9:],
+            "data":
+                {
+                    "message": "DISCARD"
+                },
+            "time_to_live": 600,
+            "delay_while_idle": True,
+            "delivery_receipt_requested": True
+        }
+        xmpp.send_gcm_message(message)
+        message = {
+            "to": gcm_bot.iot_mahjong,
+            "message_id": uuid.uuid1().urn[9:],
+            "data":
+                {
+                    "message": "WAIT"
+                },
+            "time_to_live": 600,
+            "delay_while_idle": True,
+            "delivery_receipt_requested": True
+        }
+        xmpp.send_gcm_message(message)
 
     def send_p2_tile(self):
-        pass
-        # tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
-        # for key, value in tiles2.iteritems():
-        #     if value.orientation == "0":
-        #         # send to photon a new tile
-        #         # provide tile tokenid and extract new tile from list
-        #         break
+        message = {
+            "to": gcm_bot.iot_mahjong_s6,
+            "message_id": uuid.uuid1().urn[9:],
+            "data":
+                {
+                    "message": "DRAW"
+                },
+            "time_to_live": 600,
+            "delay_while_idle": True,
+            "delivery_receipt_requested": True
+        }
+        xmpp.send_gcm_message(message)
+        message = {
+            "to": gcm_bot.iot_mahjong,
+            "message_id": uuid.uuid1().urn[9:],
+            "data":
+                {
+                    "message": "DRAW"
+                },
+            "time_to_live": 600,
+            "delay_while_idle": True,
+            "delivery_receipt_requested": True
+        }
+        xmpp.send_gcm_message(message)
 
     def tell_p2_discard(self):
         # tell p1 to discard a tile by flipping tile
         # sendMessage(message="discard")
         # client should process and show relevant thing
-        pass
+        message = {
+            "to": gcm_bot.iot_mahjong,
+            "message_id": uuid.uuid1().urn[9:],
+            "data":
+                {
+                    "message": "DISCARD"
+                },
+            "time_to_live": 600,
+            "delay_while_idle": True,
+            "delivery_receipt_requested": True
+        }
+        xmpp.send_gcm_message(message)
 
 def start_the_game():
     global machine
@@ -411,6 +478,14 @@ def photonLastestUpdate():
     mimetype="application/json")
     return resp
 
+@app.route('/playermove', methods=['POST'])
+def playermove():
+    content = request.get_json(silent=True, force=True)
+    player_update()
+    app.logger.debug(content)
+    return "player move"
+
+
 
 ##################################################################
 # ROUTING
@@ -469,7 +544,7 @@ def ledsparkvar(ledstatusInt):
 @app.route("/gcm")
 def gcmTest():
     message = {
-        "to": GcmBot.iot_mahjong_s6,
+        "to": gcm_bot.iot_mahjong_s6,
         "message_id": uuid.uuid1().urn[9:],
         "data":
             {
