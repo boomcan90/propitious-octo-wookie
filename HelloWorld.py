@@ -86,7 +86,7 @@ xmpp.register_plugin('xep_0199')  # XMPP Ping
 
 # Connect to the XMPP server and start processing XMPP stanzas.
 
-# xmpp.startConnection()
+xmpp.startConnection()
 
 
 # Keyboard Interrupt for XMPP thread
@@ -184,40 +184,39 @@ def player_update(tiles, extra=None):
         sys.stdout.flush()
 
 
-class Mahjong(object):
-    pass
 
 tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', 'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8', 'circle_9', 'number_1', 'number_2', 'number_3', 'number_4', 'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
 
-def send_p1_tile():
-    pass
-    # tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
-    # for key, value in tiles1.iteritems():
-    #     if value.orientation == "0":
-    #         # send to photon a new tile
-    #         # provide tile tokenid and extract new tile from list
-    #         break
+class Mahjong(object):
+    def send_p1_tile(self):
+        pass
+        # tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
+        # for key, value in tiles1.iteritems():
+        #     if value.orientation == "0":
+        #         # send to photon a new tile
+        #         # provide tile tokenid and extract new tile from list
+        #         break
 
-def tell_p1_discard():
-    # tell p1 to discard a tile by flipping tile
-    # sendMessage(message="discard")
-    # client should process and show relevant thing
-    pass
+    def tell_p1_discard(self):
+        # tell p1 to discard a tile by flipping tile
+        # sendMessage(message="discard")
+        # client should process and show relevant thing
+        pass
 
-def send_p2_tile():
-    pass
-    # tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
-    # for key, value in tiles2.iteritems():
-    #     if value.orientation == "0":
-    #         # send to photon a new tile
-    #         # provide tile tokenid and extract new tile from list
-    #         break
+    def send_p2_tile(self):
+        pass
+        # tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
+        # for key, value in tiles2.iteritems():
+        #     if value.orientation == "0":
+        #         # send to photon a new tile
+        #         # provide tile tokenid and extract new tile from list
+        #         break
 
-def tell_p2_discard():
-    # tell p1 to discard a tile by flipping tile
-    # sendMessage(message="discard")
-    # client should process and show relevant thing
-    pass
+    def tell_p2_discard(self):
+        # tell p1 to discard a tile by flipping tile
+        # sendMessage(message="discard")
+        # client should process and show relevant thing
+        pass
 
 def start_the_game():
     global machine
@@ -246,10 +245,6 @@ def start_the_game():
     grequests.map(reqList)
 
 
-    # setup machine
-    mahjong_game = Mahjong()
-    machine = Machine(model=mahjong_game, states=['starting', 'p1_start', 'p1_end', 'p2_start', 'p2_end', 'p1_win', 'p2_win'], initial='starting')
-
     # trigger source dest
     transitions = [
         # starting will expect both players to have tiles in a particular order
@@ -267,6 +262,12 @@ def start_the_game():
         { 'trigger': 'p2_wins', 'source': 'p2_start', 'dest': 'p2_winner' }
     ]
 
+    # setup machine
+    mahjong_game = Mahjong()
+    machine = Machine(mahjong_game, states=['starting', 'p1_start', 'p1_end', 'p2_start', 'p2_end', 'p1_win', 'p2_win'], transitions=transitions, initial='starting')
+
+
+
     print "SUBSCRIBED && MACHINE CREATED!", mahjong_game.state
     sys.stdout.flush()
 
@@ -274,8 +275,31 @@ def start_the_game():
     #tell p2 to have all 3 up
     app.logger.debug("SEND P1 & P2 STARTING SETUP!")
 
-## subscribe for events early
-start_the_game()
+    # s6 is p1 , s4 is p2
+    message = {
+        "to": gcm_bot.iot_mahjong_s6,
+        "message_id": uuid.uuid1().urn[9:],
+        "data":
+            {
+                "message": "SETUP"
+            },
+        "time_to_live": 600,
+        "delay_while_idle": True,
+        "delivery_receipt_requested": True
+    }
+    xmpp.send_gcm_message(message)
+    message = {
+        "to": gcm_bot.iot_mahjong,
+        "message_id": uuid.uuid1().urn[9:],
+        "data":
+            {
+                "message": "SETUP"
+            },
+        "time_to_live": 600,
+        "delay_while_idle": True,
+        "delivery_receipt_requested": True
+    }
+    xmpp.send_gcm_message(message)
 
 # On android app, play game button should trigger this
 @app.route('/joingame', methods=['POST', 'GET'])
@@ -317,8 +341,12 @@ def fire_p1_update():
 def fire_p2_update():
     mahjong_game.goto_p1_start()
     app.logger.debug(mahjong_game.state)
-    return "meow"
+    return "chirpy chirp chirp"
 
+@app.route('/forcestart', methods=['GET'])
+def force_start_game():
+    start_the_game()
+    return "pew pew"
 
 ##################################################################
 # PHOTON UPDATES
