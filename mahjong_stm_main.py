@@ -90,6 +90,20 @@ def p2_update(tiles, extra=None):
         print "doesn't seem to be something p2_update needs to care about"
         sys.stdout.flush()
 
+
+def send_p1_tile():
+    # find current id for tile down in tile1 set
+    # send post request to change tile
+    pass
+
+def send_p2_tile():
+    # find current id for tile down in tile2 set
+    # send post request to change tile
+    pass
+
+def send_initial_tiles():
+    pass
+
 class Mahjong(object):
     pass
 
@@ -105,7 +119,7 @@ def start_the_game():
     global listOfTiles
     listOfTiles = randomTileGen(100)
 
-    # assign tiles
+    # assign starting tiles
     # send to photon
 
 
@@ -118,8 +132,8 @@ def start_the_game():
 
     # trigger source dest
     transitions = [
-        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start' },
-        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end' },
+        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start', 'before': 'send_p1_tile'},
+        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before': 'send_p2_tile'},
         { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start' },
         { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end' },
         { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start' },

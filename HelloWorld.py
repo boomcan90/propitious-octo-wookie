@@ -226,8 +226,8 @@ def start_the_game():
 
     # trigger source dest
     transitions = [
-        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start' },
-        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end' },
+        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start', 'before': 'send_p1_tile'},
+        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before': 'send_p2_tile'},
         { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start' },
         { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end' },
         { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start' },
