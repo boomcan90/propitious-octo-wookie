@@ -1,6 +1,6 @@
 {
-    "event": "iot_mahjong_production",
-    "url": "https://intense-caverns-6032.herokuapp.com/{{endpoint}}",
+    "event": "local_dev",
+    "url": "https://true.localtunnel.me/{{endpoint}}",
     "requestType": "POST",
     "json": {
         "x": "{{x}}",

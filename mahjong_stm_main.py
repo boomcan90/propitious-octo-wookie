@@ -1,283 +1,135 @@
 from mahjong_stm_objects import *
 from mahjong_stm_util import *
-from statemachine import StateMachine
+import time
+import redis
+import sys, os
+from pubsub import pub
+from transitions import Machine
+
+redis_url = os.getenv('HEROKU_REDIS_MAUVE_URL', 'redis://localhost:6379')
+r = redis.from_url(redis_url)
+
+# orange: pirate, morphing, zombie
+user1_tiles = ["250040000347343337373737", "2b002d000447343233323032", "3b003d000347343339373536"]
+# green: raptor, hunter, dentist
+user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c001347343432313031"]
+
+def parseTileOrientation(tiles_dict):
+    orientationList = []
+    for key, value in tiles_dict.iteritems():
+        # should be a tile
+        orientationList.append(value.orientation)
+    return orientationList
+
+def parseTileKind(tiles_dict):
+    kindList = []
+    for key, value in tiles_dict.iteritems():
+        # should be a tile
+        kindList.append(value.kind)
+    return kindList
 
 ##########################################################################
-'''INITIALISATION'''
-# importing winning combinations
-# localWinningCombinations = winningCombinations
 
-# Creating user objects
-# User1 = User('User1')
-# User2 = User('User2')
+def p1_update(tiles, extra=None):
+    tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
+    tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
+    # tiles1 = parseTileOrientation(tiles1)
+    # tiles2 = parseTileOrientation(tiles2)
 
-# Creating 3 tiles for user 1
-# Tile1_1 = Tile('down')
-# Tile1_2 = Tile('up')
-# Tile1_3 = Tile('up')
-# User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
+    print "p1 update received!"
+    sys.stdout.flush()
+    print tiles1
+    sys.stdout.flush()
 
-# Creating 3 tiles for user 2
-# Tile2_1 = Tile('down')
-# Tile2_2 = Tile('down')
-# Tile2_3 = Tile('down')
-# User2.tiles = [Tile2_1, Tile2_2, Tile2_3]
-
-# Generating list of tiles.
-listOfTiles = randomTileGen(100)
-
-# Assigning tiles to the three tile objects in each user object.
-# for i in User1.tiles:
-#     i.kind = listOfTiles[0]
-#     listOfTiles.remove(listOfTiles[0])
-
-# for j in User2.tiles:
-#     j.kind = listOfTiles[0]
-#     listOfTiles.remove(listOfTiles[0])
-
-##########################################################################
-# ASSUMING THAT P1 IS USER 1.
-'''
-HOW THE SM WORKS:
-INPUT: LIST WITH 7 ELEMENTS
-pass in list with format: 6 tiles, 1 state
-First 3 are p1's
-Last 3 are p2's
-Next states:
--game_started
--p1_turn_start
--p2_turn_start
--p1_turn_end
--p2_turn_end
--p1_win
--p2_win
--end_game
-'''
-
-
-#statemachine should subscribe to updates from photon (which would be every 2 seconds)
-#somehow the updates need to be passed on to the states
-
-def game_started(inpList):
-
-    if inpList == []:
-        return ("GameStarts", inpList)
-
-    # Separating orientation of tiles of P1 and P2
-    orientationP1 = []
-    orientationP2 = []
-    for i in range(0, 3):
-        orientationP1.append(inpList[i].orientation)
-    for j in range(3, 6):
-        orientationP2.append(inpList[j].orientation)
-
-# Now if all tiles orientation is down, start game.
-# Else, error
-
-    if (orientationP1.count('up') == 2 and orientationP1.count('down') == 1 and
-            orientationP2.count('down') == 3):
-        newState = 'p1TurnStart'
-
+    if machine.state == "starting":
+        if tiles1.count(1) == 2 and tiles2.count == 3:
+            # check for both p1 and p2
+            # then got goto p1
+            machine.goto_p1_start()
+    elif machine.state == "p1_start":
+        if tiles1.count(1) == 3:
+            # check for p1 tiles up
+            # check win combi
+            # once all up go to p1 end
+            machine.goto_p1_end()
+    elif machine.state == "p1_end":
+        if tiles1.count(1) == 2:
+            # p1 needs to discard a tile by putting it face down
+            machine.goto_p2_start()
     else:
-        newState = 'GameStarts'
+        print "doesn't seem to be something p1_update needs to care about"
+        sys.stdout.flush()
 
-    return(newState, inpList)
 
+def p2_update(tiles, extra=None):
+    tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
+    tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
+    tiles1 = parseTileOrientation(tiles1)
+    tiles2 = parseTileOrientation(tiles2)
 
-def p1_turn_start(inpList):
+    print "p2 update received!"
+    sys.stdout.flush()
+    print tiles2
+    sys.stdout.flush()
 
-    # UPDATE TILE VALUES HERE. RUN WHILE LOOP UNTIL YOU GET ALL 3 UP. UPDATE
-    # INPLIST
-
-    # Creating 3 tiles for user 1
-    Tile1_1 = Tile('up')
-    Tile1_2 = Tile('up')
-    Tile1_3 = Tile('up')
-    User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
-
-    # Creating 3 tiles for user 2
-    Tile2_1 = Tile('down')
-    Tile2_2 = Tile('down')
-    Tile2_3 = Tile('down')
-    User2.tiles = [Tile2_1, Tile2_2, Tile2_3]
-
-    inpList = []
-    inpList.extend(User1.tiles)
-    inpList.extend(User2.tiles)
-
-    # begin real stuff
-    orientationP1 = []
-    orientationP2 = []
-    listTilesP1 = []
-
-    # seperate tiles for p1 and p2
-    for i in range(0, 3):
-        orientationP1.append(inpList[i].orientation)
-    for j in range(3, 6):
-        orientationP2.append(inpList[j].orientation)
-
-    for i in range(0, 3):
-        listTilesP1.append(inpList[i].kind)
-
-    # Now, if all tiles of p1 are up, it means that it must go to p1_turn_end
-    if(orientationP1.count('up') == 3):
-        print 'going to p1END'
-        newState = 'p1TurnEnd'
-
-    # Else, stay in same state
+    if machine.state == "starting":
+        # check for both p1 and p2 starts
+        if tiles1.count(1) == 2 and tiles2.count == 3:
+            machine.goto_p1_start()
+    elif machine.state == "p2_start":
+        if tiles2.count(1) == 3:
+            # check for p2 tiles up
+            # check win combi
+            # once all up go to p2 end
+            machine.goto_p2_end()
+    elif machine.state == "p2_end":
+        if tiles2.count(1) == 2:
+            # p2 needs to discard a tile by putting it face down
+            machine.goto_p1_start()
     else:
-        newState = 'p1TurnStart'
+        print "doesn't seem to be something p2_update needs to care about"
+        sys.stdout.flush()
 
-    # Check if p1 has won:
-    if(listTilesP1 in localWinningCombinations):
-        print 'p1 win state'
-        newState = 'p1Win'
-
-    return(newState, inpList)
+class Mahjong(object):
+    pass
 
 
-def p1_turn_end(inpList):
-    orientationP1 = []
-    orientationP2 = []
-    listTilesP1 = []
+def start_the_game():
+    global machine
+    global localWinningCombinations
+    localWinningCombinations = winningCombinations[:]
 
-    print "in p1 end"
+    print "GAME STARTED!"
+    sys.stdout.flush()
 
-    # Creating 3 tiles for user 1
-    Tile1_1 = Tile('up')
-    Tile1_2 = Tile('down')
-    Tile1_3 = Tile('up')
-    User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
+    global listOfTiles
+    listOfTiles = randomTileGen(100)
 
-    # Creating 3 tiles for user 2
-    Tile2_1 = Tile('down')
-    Tile2_2 = Tile('down')
-    Tile2_3 = Tile('down')
-    User2.tiles = [Tile2_1, Tile2_2, Tile2_3]
-
-    inpList = []
-    inpList.extend(User1.tiles)
-    inpList.extend(User2.tiles)
-
-    for i in range(0, 3):
-        orientationP1.append(inpList[i].orientation)
-    for j in range(3, 6):
-        orientationP2.append(inpList[j].orientation)
-
-    for i in range(0, 3):
-        listTilesP1.append(inpList[i].kind)
-
-    if (orientationP1.count('up') == 2):
-        print 'p2 turn'
-        newState = 'p2TurnStart'
-
-    else:
-        newState = 'p1TurnEnd'
-
-    return (newState, inpList)
+    # assign tiles
+    # send to photon
 
 
-def p2_turn_start(inpList):
-    # UPDATE TILE VALUES HERE. RUN WHILE LOOP UNTIL YOU GET ALL 3 UP. UPDATE
-    # INPLIST
+    # setup machine
+    mahjong_game = Mahjong()
+    machine = Machine(model=mahjong_game, states=['starting', 'p1_start', 'p1_end', 'p2_start', 'p2_end', 'p1_win', 'p2_win'], initial='starting')
 
-    # Creating 3 tiles for user 1
-    Tile1_1 = Tile('up')
-    Tile1_2 = Tile('down')
-    Tile1_3 = Tile('up')
-    User1.tiles = [Tile1_1, Tile1_2, Tile1_3]
+    pub.subscribe(p1_update, 'p1_update')
+    pub.subscribe(p2_update, 'p2_update')
 
-    # Creating 3 tiles for user 2
-    Tile2_1 = Tile('up', 'circle_1')
-    Tile2_2 = Tile('up', 'circle_2')
-    Tile2_3 = Tile('up', 'circle_3')
-    User2.tiles = [Tile2_1, Tile2_2, Tile2_3]
+    # trigger source dest
+    transitions = [
+        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start' },
+        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end' },
+        { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start' },
+        { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end' },
+        { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start' },
+        { 'trigger': 'p1_wins', 'source': 'p1_start', 'dest': 'p1_winner' },
+        { 'trigger': 'p2_wins', 'source': 'p2_start', 'dest': 'p2_winner' }
+    ]
 
-    inpList = []
-    inpList.extend(User1.tiles)
-    inpList.extend(User2.tiles)
-
-    orientationP1 = []
-    orientationP2 = []
-    listTilesP2 = []
-
-    for i in range(0, 3):
-        orientationP1.append(inpList[i].orientation)
-    for j in range(3, 6):
-        orientationP2.append(inpList[j].orientation)
-
-    for i in range(3, 6):
-        listTilesP2.append(inpList[i].kind)
-
-    # Now, if all tiles of p1 are up, it means that it must go to p1_turn_end
-    if(orientationP2.count('up') == 3):
-        print 'p2 turn end'
-        newState = 'p2TurnEnd'
-
-     # Else, stay in same state
-    else:
-        newState = 'p2TurnStart'
-
-    # Check if p1 has won:
-    if(listTilesP2 in localWinningCombinations):
-        print 'p2 win'
-        newState = 'p2Win'
-
-    return(newState, inpList)
-
-
-def p2_turn_end(inpList):
-    orientationP1 = []
-    orientationP2 = []
-
-    for i in range(0, 3):
-        orientationP1.append(inpList[i].orientation)
-    for j in range(3, 6):
-        orientationP2.append(inpList[j].orientation)
-
-    if (orientationP2.count('up') == 2):
-        newState = 'p1_turn_start'
-
-    else:
-        newState = 'p2_turn_end'
-
-    return(newState, inpList)
-
-
-def p1_win(inpList):
-    print 'player 1 wins!'
-    newState = 'Game_Over'
-
-    return(newState, inpList)
-
-
-def p2_win(inpList):
-    print 'player 2 wins!'
-    newState = 'Game_Over'
-
-    return(newState, inpList)
-
-
-##########################################################################
-# Setting up game:
-allTiles = []
-allTiles.extend(User1.tiles)
-allTiles.extend(User2.tiles)
-
-
-def startthegoddamnedgame():
-    m = StateMachine()
-    m.add_state("GameStarts", game_started)
-    m.add_state("p1TurnStart", p1_turn_start)
-    m.add_state("p2TurnStart", p2_turn_start)
-    m.add_state("p1TurnEnd", p1_turn_end)
-    m.add_state("p2TurnEnd", p2_turn_end)
-    m.add_state("p1Win", p1_win)
-    m.add_state("p2Win", p2_win)
-    m.add_state("Game_Over", None, end_state=1)
-    m.set_start("GameStarts")
-    m.run(allTiles)
+    print "SUBSCRIBED && MACHINE CREATED!"
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
-    startthegoddamnedgame()
+    start_the_game()
