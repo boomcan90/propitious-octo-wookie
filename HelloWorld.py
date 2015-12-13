@@ -39,11 +39,12 @@ user1_tiles = ["250040000347343337373737", "2b002d000447343233323032", "3b003d00
 user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c001347343432313031"]
 
 temp_user_tiles = {}
-
 for token in user1_tiles:
     temp_user_tiles[token] = Tile(token=token)
 r.set('user1_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
+
+temp_user_tiles = {}
 for token in user2_tiles:
     temp_user_tiles[token] = Tile(token=token)
 r.set('user2_live_tiles', jsonpickle.dumps(temp_user_tiles))
