@@ -46,7 +46,7 @@ r.set('user1_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
 for token in user2_tiles:
     temp_user_tiles[token] = Tile(token=token)
-r.set('use2_live_tiles', jsonpickle.dumps(temp_user_tiles))
+r.set('user2_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -138,8 +138,11 @@ def photonUpdate():
 
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
-    print r.get('user1_live_tiles')
-    resp = Response(response=r.get('user1_live_tiles'),
+    action = request.args.get('action', '')
+    data = r.get('user1_live_tiles')
+    if action != '':
+        data = r.get('user2_live_tiles')
+    resp = Response(response=data,
     status=200, \
     mimetype="application/json")
     return resp
