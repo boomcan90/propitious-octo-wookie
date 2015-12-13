@@ -19,20 +19,11 @@ specialTiles = []
 winningComboNumber = []
 winningComboCircle = []
 
-#number tiles: 'number'
-numberTiles.append('number_1')
-numberTiles.append('number_2')
-numberTiles.append('number_3')
-numberTiles.append('number_4')
-numberTiles.append('number_5')
-numberTiles.append('number_6')
-numberTiles.append('number_7')
-numberTiles.append('number_8')
-numberTiles.append('number_9')
-
-for i in range(0, len(numberTiles)-2):
-	winningComboNumber.append([numberTiles[i], numberTiles[i+1], numberTiles[i+2]])
-
+#wind tiles:
+windTiles.append('north')
+windTiles.append('south')
+windTiles.append('east')
+windTiles.append('west')
 
 #circle tiles: 'number_circle'
 circleTiles.append('circle_1')
@@ -49,24 +40,35 @@ for i in range(0, len(circleTiles)-2):
 	winningComboCircle.append([circleTiles[i], circleTiles[i+1], circleTiles[i+2]])
 
 
+#number tiles: 'number'
+numberTiles.append('number_1')
+numberTiles.append('number_2')
+numberTiles.append('number_3')
+numberTiles.append('number_4')
+numberTiles.append('number_5')
+numberTiles.append('number_6')
+numberTiles.append('number_7')
+numberTiles.append('number_8')
+numberTiles.append('number_9')
+
+for i in range(0, len(numberTiles)-2):
+	winningComboNumber.append([numberTiles[i], numberTiles[i+1], numberTiles[i+2]])
+
+
 #special tiles: dragon, dollar and tv
-specialTiles.append('dragon')
-specialTiles.append('dollar')
-specialTiles.append('tv')
+# specialTiles.append('dragon')
+# specialTiles.append('dollar')
+# specialTiles.append('tv')
 
-#wind tiles:
-windTiles.append('north')
-windTiles.append('south')
-windTiles.append('east')
-windTiles.append('west')
-
+tiles.extend(windTiles)
 tiles.extend(circleTiles)
 tiles.extend(numberTiles)
-tiles.extend(windTiles)
-tiles.extend(specialTiles)
+
+# tiles.extend(specialTiles)
 
 currentTiles = ['north', 'north', 'north']
 
+print tiles
 
 global winningCombinations
 winningCombinations = []
@@ -77,7 +79,7 @@ winningCombinations.extend(winningComboNumber)
 winningCombinations.extend(winningComboCircle)
 
 
-#print winningCombinations	#to win
+print winningCombinations	#to win
 
 ########################################################
 

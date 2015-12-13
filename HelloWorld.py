@@ -148,20 +148,20 @@ def p1_update(tiles, extra=None):
     sys.stdout.flush()
 
     if mahjong_game.state == "starting":
-        if tiles1.count(1) == 2 and tiles2.count == 3:
+        app.logger.debug("starting state evaluation")
+        if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             # check for both p1 and p2
             # then got goto p1
-            print "starting inside"
-            sys.stdout.flush()
+            app.logger.debug("starting state TRYING to move on to start")
             mahjong_game.goto_p1_start()
     elif mahjong_game.state == "p1_start":
-        if tiles1.count(1) == 3:
+        if tiles1.count("1") == 3:
             # check for p1 tiles up
             # check win combi
             # once all up go to p1 end
             mahjong_game.goto_p1_end()
     elif mahjong_game.state == "p1_end":
-        if tiles1.count(1) == 2:
+        if tiles1.count("1") == 2:
             # p1 needs to discard a tile by putting it face down
             mahjong_game.goto_p2_start()
     else:
@@ -184,25 +184,48 @@ def p2_update(tiles, extra=None):
 
     if mahjong_game.state == "starting":
         # check for both p1 and p2 starts
-        if tiles1.count(1) == 2 and tiles2.count == 3:
+        if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             mahjong_game.goto_p1_start()
     elif mahjong_game.state == "p2_start":
-        if tiles2.count(1) == 3:
+        if tiles2.count("1") == 3:
             # check for p2 tiles up
             # check win combi
             # once all up go to p2 end
             mahjong_game.goto_p2_end()
     elif mahjong_game.state == "p2_end":
-        if tiles2.count(1) == 2:
+        if tiles2.count("1") == 2:
             # p2 needs to discard a tile by putting it face down
             mahjong_game.goto_p1_start()
     else:
         print "doesn't seem to be something p2_update needs to care about"
         sys.stdout.flush()
 
+
 class Mahjong(object):
     pass
 
+
+def send_p1_tile():
+    tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
+    for key, value in tiles1.iteritems():
+        if value.orientation == "0":
+            # send to photon a new tile
+            # provide tile tokenid and extract new tile from list
+            break
+
+def tell_p1_discard():
+    # tell p1 to discard a tile by flipping tile
+    # sendMessage(message="discard")
+    # client should process and show relevant thing
+    pass
+
+def send_p2_tile():
+    tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
+    for key, value in tiles2.iteritems():
+        if value.orientation == "0":
+            # send to photon a new tile
+            # provide tile tokenid and extract new tile from list
+            break
 
 def start_the_game():
     global machine
@@ -226,11 +249,17 @@ def start_the_game():
 
     # trigger source dest
     transitions = [
+        # starting will expect both players to have tiles in a particular order
         { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start', 'before': 'send_p1_tile'},
-        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before': 'send_p2_tile'},
-        { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start' },
-        { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end' },
-        { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start' },
+        # send p1 tile and say please flip up your tiles
+        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before':'tell_p1_discard'},
+        # say p1 now please discard a tile, flip 1 down
+        { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start', 'before': 'send_p2_tile'},
+        # send p2 tile and say please flip up your tiles
+        { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end', 'before':'tell_p2_discard' },
+        # say p2 now please discard a tile, flip 1 down
+        { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start', 'before':'send_p1_tile' },
+        # go back to 1 if nobody won
         { 'trigger': 'p1_wins', 'source': 'p1_start', 'dest': 'p1_winner' },
         { 'trigger': 'p2_wins', 'source': 'p2_start', 'dest': 'p2_winner' }
     ]
