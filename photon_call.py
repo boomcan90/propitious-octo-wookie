@@ -1,5 +1,6 @@
 import requests
 import sys
+import grequests
 
 # file called credentials.py which constains the following vars
 from credentials import *
@@ -7,6 +8,28 @@ from credentials import *
 # PARTICLE_ID="YOUR_PARTICLE_ID"
 # PARTICLE_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
 # PARTICLE_FUNCTION = "YOUR_PARTICLE_FUNCTION"
+def callback_function(response):
+  # response.code # The HTTP status code
+  # response.headers # The HTTP headers
+  # response.body # The parsed response
+  # response.raw_body # The unparsed response
+  print response.code
+  sys.stdout.flush()
+
+def construct_tile_async(tile=None, token=None):
+    print "contructing"
+    sys.stdout.flush()
+    if (tile == None):
+        tile = 0
+
+    PARTICLE_FUNCTION = "tile"
+    URL = "https://api.particle.io/v1/devices/"
+    SLASH = "/"
+    TOKEN_LABEL = "?access_token="
+    PAYLOAD = {"args": tile}
+    return grequests.post(URL + token + SLASH +
+                           PARTICLE_FUNCTION + TOKEN_LABEL +
+                           PARTICLE_ACCESS_TOKEN, json=PAYLOAD)
 
 def send_tile(tile=None, token=None):
     # VARIABLES
@@ -22,18 +45,18 @@ def send_tile(tile=None, token=None):
 
     # COMMANDLINE ARGS
     # 0 -  file_name.py , 1 - arg[0] ...
-    if (len(sys.argv) > 1):
-        PAYLOAD = {"args": sys.argv[1]}
+    # if (len(sys.argv) > 1):
+    #     PAYLOAD = {"args": sys.argv[1]}
 
     # MAGIC
     print "Dancing monkeys are executing your request..."
-    result = requests.post(URL + PARTICLE_ID + SLASH +
+    result = requests.post(URL + token + SLASH +
                            PARTICLE_FUNCTION + TOKEN_LABEL +
-                           token, json=PAYLOAD)
+                           PARTICLE_ACCESS_TOKEN, json=PAYLOAD)
     return result.text
 
 
-def sendToPhoton(payload_for_sending):
+def sendToPhoton(payload_for_sending=None):
     # VARIABLES
 
     if (payload_for_sending == ""):
@@ -73,4 +96,4 @@ def getFromPhoton(pid=None):
     return result.text
 
 if __name__ == "__main__":
-    sendToPhoton()
+    send_tile_async(tile="0", token="2b002d000447343233323032")

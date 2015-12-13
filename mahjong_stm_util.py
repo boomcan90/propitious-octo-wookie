@@ -68,7 +68,7 @@ tiles.extend(numberTiles)
 
 currentTiles = ['north', 'north', 'north']
 
-print tiles
+# print tiles
 
 global winningCombinations
 winningCombinations = []
@@ -114,7 +114,7 @@ def randomTileGen(numTiles):
 
 	return tilesGenerated
 
-print randomTileGen(100)
+# print randomTileGen(100)
 
 ########################################################
 

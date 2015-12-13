@@ -18,6 +18,7 @@ import sys
 import pytz
 import datetime
 import ciso8601
+import grequests
 
 #Publish subscribe
 from pubsub import pub
@@ -137,58 +138,37 @@ def parseTileKind(tiles_dict):
 
 ##########################################################################
 
-def p1_update(tiles, extra=None):
+def player_update(tiles, extra=None):
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
     tiles1 = parseTileOrientation(tiles1)
     tiles2 = parseTileOrientation(tiles2)
 
-    print "p1 update received!"
-    sys.stdout.flush()
-    print tiles1
+    print jsonpickle.dumps(r.get('user1_live_tiles'))
     sys.stdout.flush()
     print mahjong_game.state
     sys.stdout.flush()
 
     if mahjong_game.state == "starting":
         app.logger.debug("starting state evaluation")
+        app.logger.debug(tiles1)
         if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             # check for both p1 and p2
             # then got goto p1
-            app.logger.debug("starting state TRYING to move on to start")
+            app.logger.debug("starting state TRYING to move on to p1 start")
             mahjong_game.goto_p1_start()
     elif mahjong_game.state == "p1_start":
+        app.logger.debug("P1 START STATE HOORAYYYY")
         if tiles1.count("1") == 3:
             # check for p1 tiles up
             # check win combi
             # once all up go to p1 end
+            app.logger.debug("P1 END STATE GOING TO P2")
             mahjong_game.goto_p1_end()
     elif mahjong_game.state == "p1_end":
         if tiles1.count("1") == 2:
             # p1 needs to discard a tile by putting it face down
             mahjong_game.goto_p2_start()
-    else:
-        print "doesn't seem to be something p1_update needs to care about"
-        sys.stdout.flush()
-
-
-def p2_update(tiles, extra=None):
-    tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
-    tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
-    tiles1 = parseTileOrientation(tiles1)
-    tiles2 = parseTileOrientation(tiles2)
-
-    print "p2 update received!"
-    sys.stdout.flush()
-    print tiles2
-    sys.stdout.flush()
-    print mahjong_game.state
-    sys.stdout.flush()
-
-    if mahjong_game.state == "starting":
-        # check for both p1 and p2 starts
-        if tiles1.count("1") == 2 and tiles2.count("1") == 3:
-            mahjong_game.goto_p1_start()
     elif mahjong_game.state == "p2_start":
         if tiles2.count("1") == 3:
             # check for p2 tiles up
@@ -200,7 +180,7 @@ def p2_update(tiles, extra=None):
             # p2 needs to discard a tile by putting it face down
             mahjong_game.goto_p1_start()
     else:
-        print "doesn't seem to be something p2_update needs to care about"
+        print "doesn't seem to be something p1_update needs to care about"
         sys.stdout.flush()
 
 
@@ -210,12 +190,13 @@ class Mahjong(object):
 tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', 'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8', 'circle_9', 'number_1', 'number_2', 'number_3', 'number_4', 'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
 
 def send_p1_tile():
-    tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
-    for key, value in tiles1.iteritems():
-        if value.orientation == "0":
-            # send to photon a new tile
-            # provide tile tokenid and extract new tile from list
-            break
+    pass
+    # tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
+    # for key, value in tiles1.iteritems():
+    #     if value.orientation == "0":
+    #         # send to photon a new tile
+    #         # provide tile tokenid and extract new tile from list
+    #         break
 
 def tell_p1_discard():
     # tell p1 to discard a tile by flipping tile
@@ -224,12 +205,19 @@ def tell_p1_discard():
     pass
 
 def send_p2_tile():
-    tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
-    for key, value in tiles2.iteritems():
-        if value.orientation == "0":
-            # send to photon a new tile
-            # provide tile tokenid and extract new tile from list
-            break
+    pass
+    # tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
+    # for key, value in tiles2.iteritems():
+    #     if value.orientation == "0":
+    #         # send to photon a new tile
+    #         # provide tile tokenid and extract new tile from list
+    #         break
+
+def tell_p2_discard():
+    # tell p1 to discard a tile by flipping tile
+    # sendMessage(message="discard")
+    # client should process and show relevant thing
+    pass
 
 def start_the_game():
     global machine
@@ -242,18 +230,20 @@ def start_the_game():
 
     global listOfTiles
     listOfTiles = randomTileGen(100)
-
     # assign tiles
     # send to photon
+    reqList = []
     for i in range(3):
         photon_token = user1_tiles[i]
-        tile_to_send = tiles[listOfTiles.pop()]
-        photon_call.send_tile(tile=tile_to_send, token=photon_token)
+        tile_to_send = tiles.index(listOfTiles.pop())
+        reqList.append(photon_call.construct_tile_async(tile=str(tile_to_send), token=photon_token))
 
     for i in range(3):
         photon_token = user2_tiles[i]
-        tile_to_send = tiles[listOfTiles.pop()]
-        photon_call.send_tile(tile=tile_to_send, token=photon_token)
+        tile_to_send = tiles.index(listOfTiles.pop())
+        reqList.append(photon_call.construct_tile_async(tile=str(tile_to_send), token=photon_token))
+
+    grequests.map(reqList)
 
 
     # setup machine
@@ -280,9 +270,11 @@ def start_the_game():
     print "SUBSCRIBED && MACHINE CREATED!", mahjong_game.state
     sys.stdout.flush()
 
+    #push notification tell p1 to arrange 2 up and 1 down
+    #tell p2 to have all 3 up
+    app.logger.debug("SEND P1 & P2 STARTING SETUP!")
+
 ## subscribe for events early
-pub.subscribe(p1_update, 'p1_update')
-pub.subscribe(p2_update, 'p2_update')
 start_the_game()
 
 # On android app, play game button should trigger this
@@ -318,12 +310,13 @@ def reset_game():
 
 @app.route('/fakep1update', methods=['GET'])
 def fire_p1_update():
-    pub.sendMessage('p1_update', tiles="hello1")
+    player_update("")
     return "meow"
 
 @app.route('/fakep2update', methods=['GET'])
 def fire_p2_update():
-    pub.sendMessage('p2_update', tiles="hello2")
+    mahjong_game.goto_p1_start()
+    app.logger.debug(mahjong_game.state)
     return "meow"
 
 
@@ -335,42 +328,41 @@ def fire_p2_update():
 def tileUpdateHandler(tile_data):
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
-    app.logger.debug('Got tiles')
+    # app.logger.debug(jsonpickle.dumps(tiles1))
     if "source" in tile_data:
-        app.logger.debug('Source found')
         if tile_data["source"] in user1_tiles:
-            app.logger.debug('Updating tiles1')
+            # if tiles1[tile_data["source"]].orientation != tile_data["orientation"]:
+            #     #updates
+            #     app.logger.debug('TILE1 CHANGE IN ORIENTATION')
+            #     pub.sendMessage('p1_update', tiles=tiles1, extra=None)
+
             tiles1[tile_data["source"]].orientation = tile_data["orientation"]
             tiles1[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
             tiles1[tile_data["source"]].x = tile_data["x"]
             tiles1[tile_data["source"]].y = tile_data["y"]
             tiles1[tile_data["source"]].z = tile_data["z"]
             r.set('user1_live_tiles', jsonpickle.dumps(tiles1))
-            app.logger.debug('Done with tiles1')
-            if tiles1[tile_data["source"]].orientation != tile_data["orientation"]:
-                #updates
-                pub.sendMessage('p1_update', arg1=tiles1)
-                app.logger.debug('TILE1 CHANGE IN ORIENTATION')
+
+
 
         elif tile_data["source"] in user2_tiles:
-            app.logger.debug('Updating tiles2')
+            # if tiles2[tile_data["source"]].orientation != tile_data["orientation"]:
+            #     #updates
+            #     app.logger.debug('TILE2 CHANGE IN ORIENTATION')
+            #     pub.sendMessage('p2_update', tiles=tiles2, extra=None)
+
             tiles2[tile_data["source"]].orientation = tile_data["orientation"]
             tiles2[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
             tiles2[tile_data["source"]].x = tile_data["x"]
             tiles2[tile_data["source"]].y = tile_data["y"]
             tiles2[tile_data["source"]].z = tile_data["z"]
             r.set('user2_live_tiles', jsonpickle.dumps(tiles2))
-            app.logger.debug('Done with tiles2')
-            if tiles2[tile_data["source"]].orientation != tile_data["orientation"]:
-                #updates
-                pub.sendMessage('p2_update', arg1=tiles2)
-                app.logger.debug('TILE2 CHANGE IN ORIENTATION')
+
         else:
             app.logger.debug('An error occurred processing tile data.')
 
 @app.route('/photonUpdate', methods=['POST'])
 def photonUpdate():
-    app.logger.debug("photon update recevied")
     content = request.get_json(silent=True, force=True)
     # remove the additional property particle servers provide
     content.pop("data", None)
