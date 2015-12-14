@@ -242,7 +242,7 @@ tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', '
 
 def send_a_tile_to_user(user):
     token = ""
-    tiles = {}
+    tilesah = {}
     if user == "p1":
         tilesah = jsonpickle.loads(r.get('user1_live_tiles'))
     if user == "p2":
