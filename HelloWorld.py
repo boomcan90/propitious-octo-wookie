@@ -253,7 +253,7 @@ def send_a_tile_to_user(user):
         tile_to_send = listOfTiles.pop()
         app.logger.debug(str(tile_to_send))
         app.logger.debug(str(token))
-        photon_call.construct_tile_async(tile=str(tile_to_send), token=token)
+        grequests.map([photon_call.construct_tile_async(tile=str(tile_to_send), token=token)])
         r.set('listOfTiles', jsonpickle.dumps(listOfTiles))
 
 
