@@ -200,33 +200,38 @@ def player_update(tiles=None, extra=None):
         app.logger.debug("tiles2 1 count :: "  + str(tiles2.count("1")))
         if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             mahjong_game.goto_p1_start()
-            app.logger.debug("going to p1start")
+            app.logger.debug("going to P1 START")
             r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p1_start":
-        app.logger.debug("P1 START STATE HOORAYYYY")
+        app.logger.debug("P1 START")
         if tiles1.count("1") == 3:
-            app.logger.debug("P1 END STATE GOING TO P2")
+            app.logger.debug("going P1 END STATE")
             mahjong_game.goto_p1_end()
             r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p1_end":
-        if tiles1.count("1") == 2:
+        app.logger.debug("P1 END")
+        if tiles1.count("1") == 2 and tiles2.count("1") == 2:
             # p1 needs to discard a tile by putting it face down
             mahjong_game.goto_p2_start()
+            app.logger.debug("going P2 START STATE")
             r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p2_start":
-        r.set('game_state', mahjong_game.state)
+        app.logger.debug("P2 START STATE")
         if tiles2.count("1") == 3:
             # check for p2 tiles up
             # check win combi
             # once all up go to p2 end
             mahjong_game.goto_p2_end()
             r.set('game_state', mahjong_game.state)
+            app.logger.debug("P2 END STATE")
     elif mahjong_game.state == "p2_end":
+        app.logger.debug("going P2 END STATE")
         r.set('game_state', mahjong_game.state)
         if tiles2.count("1") == 2:
             # p2 needs to discard a tile by putting it face down
             mahjong_game.goto_p1_start()
             r.set('game_state', mahjong_game.state)
+            app.logger.debug("P2 END STATE")
     else:
         print "doesn't seem to be something p1_update needs to care about"
         sys.stdout.flush()
