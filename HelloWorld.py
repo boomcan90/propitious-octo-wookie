@@ -275,7 +275,7 @@ class Mahjong(object):
         send_gcm_message("WAIT", gcm_bot.iot_mahjong)
 
     def send_p2_tile(self):
-        send_a_tile_to_user("p1")
+        send_a_tile_to_user("p2")
         send_gcm_message("WAIT", gcm_bot.iot_mahjong_s6)
         send_gcm_message("DRAW", gcm_bot.iot_mahjong)
 
