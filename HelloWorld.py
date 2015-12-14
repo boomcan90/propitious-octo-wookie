@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, url_for, redirect, session, Response
-import sparkfunction
 import photon_call
 from mahjong_stm_objects import *
 from mahjong_stm_util import *
@@ -31,50 +30,62 @@ app = Flask(__name__)
 ##################################################################
 import logging
 from logging import StreamHandler
-file_handler = StreamHandler()
-app.logger.setLevel(logging.DEBUG)  # set the desired logging level here
-app.logger.addHandler(file_handler)
+
 
 # only python 3.2 fixed a bug for %z for this
 #naive_date = datetime.datetime.strptime("2015-12-13T03:34:53+00:00", "%Y-%m-%dT%H:%M:%S%z")
-ts = ciso8601.parse_datetime("2015-12-12T09:49:54.874Z")
-local_timezone = pytz.timezone('Asia/Singapore')
-date_converted = ts.astimezone(local_timezone)
-print(date_converted)   # 2013-10-21 08:44:08-07:00
-sys.stdout.flush()
+# ts = ciso8601.parse_datetime("2015-12-12T09:49:54.874Z")
+# local_timezone = pytz.timezone('Asia/Singapore')
+# date_converted = ts.astimezone(local_timezone)
+# print(date_converted)   # 2013-10-21 08:44:08-07:00
+# sys.stdout.flush()
 
-##################################################################
-# GLOBAL OBJECTS
-##################################################################
-#Redis
+
 redis_url = os.getenv('HEROKU_REDIS_MAUVE_URL', 'redis://localhost:6379')
 r = redis.from_url(redis_url)
-r.set('temp_photon_data', 'nothing yet')
-
-
-#Hacky user management and tiles
-r.set('online_clients', jsonpickle.dumps([]))
-
-r.set('user1_live_tiles', jsonpickle.dumps({}))
-r.set('user2_live_tiles', jsonpickle.dumps({}))
 
 # orange: pirate, morphing, zombie
 user1_tiles = ["250040000347343337373737", "2b002d000447343233323032", "3b003d000347343339373536"]
 # green: raptor, hunter, dentist
 user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c001347343432313031"]
-r.set('user1_tiles', jsonpickle.dumps(user1_tiles))
-r.set('user2_tiles', jsonpickle.dumps(user2_tiles))
 
-temp_user_tiles = {}
-for token in user1_tiles:
-    temp_user_tiles[token] = Tile(token=token)
-r.set('user1_live_tiles', jsonpickle.dumps(temp_user_tiles))
+@app.before_first_request
+def initial_execution():
+##################################################################
+# GLOBAL OBJECTS
+##################################################################
+#Redis
+    file_handler = StreamHandler()
+    app.logger.setLevel(logging.DEBUG)  # set the desired logging level here
+    app.logger.addHandler(file_handler)
+
+    r.set('temp_photon_data', 'nothing yet')
 
 
-temp_user_tiles = {}
-for token in user2_tiles:
-    temp_user_tiles[token] = Tile(token=token)
-r.set('user2_live_tiles', jsonpickle.dumps(temp_user_tiles))
+    #Hacky user management and tiles
+    r.set('online_clients', jsonpickle.dumps([]))
+
+    r.set('listOfTiles', jsonpickle.dumps([]))
+
+    r.set('user1_live_tiles', jsonpickle.dumps({}))
+    r.set('user2_live_tiles', jsonpickle.dumps({}))
+
+    r.set('user1_tiles', jsonpickle.dumps(user1_tiles))
+    r.set('user2_tiles', jsonpickle.dumps(user2_tiles))
+
+    temp_user_tiles = {}
+    for token in user1_tiles:
+        temp_user_tiles[token] = Tile(token=token)
+    r.set('user1_live_tiles', jsonpickle.dumps(temp_user_tiles))
+
+
+    temp_user_tiles = {}
+    for token in user2_tiles:
+        temp_user_tiles[token] = Tile(token=token)
+    r.set('user2_live_tiles', jsonpickle.dumps(temp_user_tiles))
+
+    # Hacky game state
+    r.set('game_state', "nothing")
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -86,7 +97,7 @@ xmpp.register_plugin('xep_0199')  # XMPP Ping
 
 # Connect to the XMPP server and start processing XMPP stanzas.
 
-xmpp.startConnection()
+# xmpp.startConnection()
 
 
 # Keyboard Interrupt for XMPP thread
@@ -138,25 +149,54 @@ def parseTileKind(tiles_dict):
 
 ##########################################################################
 
+def send_gcm_message(message, reg_id):
+    gcm = GCM(API_KEY)
+    data = {'message': message}
+    gcm.plaintext_request(registration_id=reg_id, data=data)
+
 def player_update(tiles=None, extra=None):
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
     tiles1 = parseTileOrientation(tiles1)
     tiles2 = parseTileOrientation(tiles2)
 
-    print jsonpickle.dumps(r.get('user1_live_tiles'))
-    sys.stdout.flush()
-    print mahjong_game.state
-    sys.stdout.flush()
+    # recreate statemachine
+    transitions = [
+        # starting will expect both players to have tiles in a particular order
+        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start', 'before': 'send_p1_tile'},
+        # send p1 tile and say please flip up your tiles
+        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before':'tell_p1_discard'},
+        # say p1 now please discard a tile, flip 1 down
+        { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start', 'before': 'send_p2_tile'},
+        # send p2 tile and say please flip up your tiles
+        { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end', 'before':'tell_p2_discard' },
+        # say p2 now please discard a tile, flip 1 down
+        { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start', 'before':'send_p1_tile' },
+        # go back to 1 if nobody won
+        { 'trigger': 'p1_wins', 'source': 'p1_start', 'dest': 'p1_winner' },
+        { 'trigger': 'p2_wins', 'source': 'p2_start', 'dest': 'p2_winner' }
+    ]
+
+    # setup machine
+    mahjong_game = Mahjong()
+    machine = Machine(mahjong_game, states=['starting', 'p1_start', 'p1_end', 'p2_start', 'p2_end', 'p1_win', 'p2_win'], transitions=transitions, initial='starting')
+
+    app.logger.debug(r.get('game_state'))
+
+    # mahjong_game.set_state(r.get('game_state'))
+
+    app.logger.debug("current state:: " + mahjong_game.state)
+    app.logger.debug(tiles1)
 
     if mahjong_game.state == "starting":
         app.logger.debug("starting state evaluation")
-        app.logger.debug(tiles1)
+        r.set('game_state', mahjong_game.state)
         if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             # check for both p1 and p2
             # then got goto p1
             mahjong_game.goto_p1_start()
     elif mahjong_game.state == "p1_start":
+        r.set('game_state', mahjong_game.state)
         app.logger.debug("P1 START STATE HOORAYYYY")
         if tiles1.count("1") == 3:
             # check for p1 tiles up
@@ -165,23 +205,25 @@ def player_update(tiles=None, extra=None):
             app.logger.debug("P1 END STATE GOING TO P2")
             mahjong_game.goto_p1_end()
     elif mahjong_game.state == "p1_end":
+        r.set('game_state', mahjong_game.state)
         if tiles1.count("1") == 2:
             # p1 needs to discard a tile by putting it face down
             mahjong_game.goto_p2_start()
     elif mahjong_game.state == "p2_start":
+        r.set('game_state', mahjong_game.state)
         if tiles2.count("1") == 3:
             # check for p2 tiles up
             # check win combi
             # once all up go to p2 end
             mahjong_game.goto_p2_end()
     elif mahjong_game.state == "p2_end":
+        r.set('game_state', mahjong_game.state)
         if tiles2.count("1") == 2:
             # p2 needs to discard a tile by putting it face down
             mahjong_game.goto_p1_start()
     else:
         print "doesn't seem to be something p1_update needs to care about"
         sys.stdout.flush()
-
 
 
 tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', 'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8', 'circle_9', 'number_1', 'number_2', 'number_3', 'number_4', 'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
@@ -286,16 +328,11 @@ class Mahjong(object):
         xmpp.send_gcm_message(message)
 
 def start_the_game():
-    global machine
-    global mahjong_game
-    global localWinningCombinations
-    localWinningCombinations = winningCombinations[:]
-
     print "GAME STARTED!"
     sys.stdout.flush()
 
-    global listOfTiles
     listOfTiles = randomTileGen(100)
+
     # assign tiles
     # send to photon
     reqList = []
@@ -311,6 +348,8 @@ def start_the_game():
 
     grequests.map(reqList)
 
+    # store list of tiles in redis
+    r.set('listOfTiles', jsonpickle.dumps(listOfTiles))
 
     # trigger source dest
     transitions = [
@@ -333,10 +372,15 @@ def start_the_game():
     mahjong_game = Mahjong()
     machine = Machine(mahjong_game, states=['starting', 'p1_start', 'p1_end', 'p2_start', 'p2_end', 'p1_win', 'p2_win'], transitions=transitions, initial='starting')
 
+    # set game state
+    r.set('game_state', mahjong_game.state)
 
 
     print "SUBSCRIBED && MACHINE CREATED!", mahjong_game.state
     sys.stdout.flush()
+
+    app.logger.debug(r.get('game_state'))
+
 
     #push notification tell p1 to arrange 2 up and 1 down
     #tell p2 to have all 3 up
@@ -497,48 +541,6 @@ def main():
                            ledstatus=1, authbool=True)
 
 ##################################################################
-# PARTICLE LED TEST
-##################################################################
-@app.route('/dataNow')
-def DataNow():
-    dataDict = sparkfunction.VarUpdate("delimOT")
-    dataVals = dataDict.split(";")
-    tempdata = dataVals[0]
-    ledstatus = ledsparkvar(int(dataVals[1]))
-    utimedata = dataVals[2] + " Days, " + dataVals[3] + \
-        ":" + dataVals[4] + ":" + dataVals[5]
-
-    authcookie = False
-    if 'authuser' in session:
-        authcookie = True
-    if (request.args.get('auth') == 'xxx') or (authcookie):
-        authbool = True
-    else:
-        authbool = False
-    return render_template('sparktemplate.html', tempdata=tempdata,
-                           utimedata=utimedata, ledstatus=ledstatus,
-                           authbool=authbool)
-
-
-@app.route('/led', methods=['POST'])
-def LEDChange():
-    sparkfunction.sparkLED(request.form['LED'])
-    session['authuser'] = 'xxx'
-    session.permanent = True
-    return redirect('./')
-
-
-def ledsparkvar(ledstatusInt):
-    if ledstatusInt == 1:
-        ledstatus = "On"
-    elif ledstatusInt == 0:
-        ledstatus = "Off"
-    else:
-        ledstatus = "LED Error"
-    return ledstatus
-
-
-##################################################################
 # Example of how you would use the XMPP object to send message.
 ##################################################################
 @app.route("/gcm")
@@ -597,25 +599,6 @@ def get_pos():
 def demo_page():
     return render_template('./index.html')
 
-# Testing some stuff - if its possible to show the current state on the
-# webserver
-@app.route('/yieldd')
-def yieldd():
-    def inner():
-        proc = subprocess.Popen(
-            # call something with a lot of output so we can see it
-            ["python", "mahjongStates_vFINAL.py"],
-            shell=False,
-            stdout=subprocess.PIPE
-        )
-
-        for line in iter(proc.stdout.readline, ''):
-            # Don't need this just shows the text streaming
-            time.sleep(1)
-            yield line.rstrip() + '<br/>\n'
-
-    # text/html is required for most browsers to show th$
-    return Response(inner(), mimetype='text/html')
 
 if __name__ == '__main__':
     # TODO: add algo to make the tiles here
