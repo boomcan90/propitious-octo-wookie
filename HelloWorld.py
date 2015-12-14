@@ -198,7 +198,7 @@ def player_update(tiles=None, extra=None):
         app.logger.debug("starting state evaluation")
         app.logger.debug("tiles1 1 count :: "  + str(tiles1.count("1")))
         app.logger.debug("tiles2 1 count :: "  + str(tiles2.count("1")))
-        if tiles1.count("1") == 2 and tiles2.count("1") == 3:
+        if tiles1.count("1") == 2 and tiles2.count("1") == 2:
             mahjong_game.goto_p1_start()
             app.logger.debug("going to P1 START")
             r.set('game_state', mahjong_game.state)
@@ -229,7 +229,7 @@ def player_update(tiles=None, extra=None):
         r.set('game_state', mahjong_game.state)
         if tiles2.count("1") == 2:
             # p2 needs to discard a tile by putting it face down
-            mahjong_game.goto_p1_start()
+            mahjong_game.goto_p1_again()
             r.set('game_state', mahjong_game.state)
             app.logger.debug("P2 END STATE")
     else:
@@ -364,8 +364,6 @@ def join_game():
         r.set('online_clients', jsonpickle.dumps(player_list))
 
     if len(player_list) >= 2:
-        # pub.subscribe(p1_update, 'p1_update')
-        # pub.subscribe(p2_update, 'p2_update')
         start_the_game()
         return "started"
     return "need another player"
