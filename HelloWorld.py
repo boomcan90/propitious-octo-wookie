@@ -192,8 +192,8 @@ def player_update(tiles=None, extra=None):
 
     if mahjong_game.state == "starting":
         app.logger.debug("starting state evaluation")
-        app.logger.debug("tiles1 1 count :: "  + tiles1.count("1"))
-        app.logger.debug("tiles2 1 count :: "  + tiles2.count("1"))
+        app.logger.debug("tiles1 1 count :: "  + str(tiles1.count("1")))
+        app.logger.debug("tiles2 1 count :: "  + str(tiles2.count("1")))
         r.set('game_state', mahjong_game.state)
         if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             # check for both p1 and p2
