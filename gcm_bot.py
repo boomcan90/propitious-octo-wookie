@@ -40,7 +40,7 @@ PORT = 5235
 USERNAME = '849833088289@gcm.googleapis.com'
 PASSWORD = 'AIzaSyAXy1plvmocySlJ87_8R0Gvrr-QA9bcpOo'
 
-iot_mahjong = 'eBd2GDS1x5c:APA91bGWN57R-M7LWk-yNS-M77WDCyu_1_xNIiv2CwCbWa2KS7b6-CmL2ZcrjvI3n71606jHvnfglkaqkkXKh13NR3f4PH7-5rth8jPlc7yCCwhpP-0SnjpNP5Fix3F_IC28k-Wu6G6K'
+iot_mahjong = 'fyygEukC5Hw:APA91bGyCm3e--AV1GMI0pmtBGjO3XiAjS8WqNW21TKVnGkLRAoJvzVskgX_4FM5JdaZYOG7Lmmg8lF8sII5lQcxetW2kvSLbwTvd18OgicF1zT6gFQ8YIwIwZy32VvTvwmcE3RLQWBe'
 
 iot_mahjong_s6 = 'c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF'
 

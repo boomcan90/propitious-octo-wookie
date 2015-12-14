@@ -18,6 +18,7 @@ import pytz
 import datetime
 import ciso8601
 import grequests
+from gcm import GCM
 
 #Publish subscribe
 from pubsub import pub
@@ -90,10 +91,10 @@ def initial_execution():
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
 ##################################################################
-xmpp = gcm_bot.GcmBot(gcm_bot.USERNAME, gcm_bot.PASSWORD)
-xmpp.register_plugin('xep_0184') # Message Delivery Receipts
-xmpp.register_plugin('xep_0198') # Stream Management
-xmpp.register_plugin('xep_0199')  # XMPP Ping
+# xmpp = gcm_bot.GcmBot(gcm_bot.USERNAME, gcm_bot.PASSWORD)
+# xmpp.register_plugin('xep_0184') # Message Delivery Receipts
+# xmpp.register_plugin('xep_0198') # Stream Management
+# xmpp.register_plugin('xep_0199')  # XMPP Ping
 
 # Connect to the XMPP server and start processing XMPP stanzas.
 
@@ -150,7 +151,7 @@ def parseTileKind(tiles_dict):
 ##########################################################################
 
 def send_gcm_message(message, reg_id):
-    gcm = GCM(API_KEY)
+    gcm = GCM("AIzaSyAf6J6MHvUlpnT_FIOoCws8Fs8oL7E0oOc")
     data = {'message': message}
     gcm.plaintext_request(registration_id=reg_id, data=data)
 
@@ -230,102 +231,20 @@ tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', '
 
 class Mahjong(object):
     def send_p1_tile(self):
-        message = {
-            "to": gcm_bot.iot_mahjong_s6,
-            "message_id": uuid.uuid1().urn[9:],
-            "data":
-                {
-                    "message": "DRAW"
-                },
-            "time_to_live": 600,
-            "delay_while_idle": True,
-            "delivery_receipt_requested": True
-        }
-        xmpp.send_gcm_message(message)
-        message = {
-            "to": gcm_bot.iot_mahjong,
-            "message_id": uuid.uuid1().urn[9:],
-            "data":
-                {
-                    "message": "WAIT"
-                },
-            "time_to_live": 600,
-            "delay_while_idle": True,
-            "delivery_receipt_requested": True
-        }
-        xmpp.send_gcm_message(message)
+        send_gcm_message("DRAW", gcm_bot.iot_mahjong_s6)
+        send_gcm_message("WAIT", gcm_bot.iot_mahjong)
 
     def tell_p1_discard(self):
-        # tell p1 to discard a tile by flipping tile
-        # sendMessage(message="discard")
-        # client should process and show relevant thing
-        message = {
-            "to": gcm_bot.iot_mahjong_s6,
-            "message_id": uuid.uuid1().urn[9:],
-            "data":
-                {
-                    "message": "DISCARD"
-                },
-            "time_to_live": 600,
-            "delay_while_idle": True,
-            "delivery_receipt_requested": True
-        }
-        xmpp.send_gcm_message(message)
-        message = {
-            "to": gcm_bot.iot_mahjong,
-            "message_id": uuid.uuid1().urn[9:],
-            "data":
-                {
-                    "message": "WAIT"
-                },
-            "time_to_live": 600,
-            "delay_while_idle": True,
-            "delivery_receipt_requested": True
-        }
-        xmpp.send_gcm_message(message)
+        send_gcm_message("DISCARD", gcm_bot.iot_mahjong_s6)
+        send_gcm_message("WAIT", gcm_bot.iot_mahjong)
 
     def send_p2_tile(self):
-        message = {
-            "to": gcm_bot.iot_mahjong_s6,
-            "message_id": uuid.uuid1().urn[9:],
-            "data":
-                {
-                    "message": "DRAW"
-                },
-            "time_to_live": 600,
-            "delay_while_idle": True,
-            "delivery_receipt_requested": True
-        }
-        xmpp.send_gcm_message(message)
-        message = {
-            "to": gcm_bot.iot_mahjong,
-            "message_id": uuid.uuid1().urn[9:],
-            "data":
-                {
-                    "message": "DRAW"
-                },
-            "time_to_live": 600,
-            "delay_while_idle": True,
-            "delivery_receipt_requested": True
-        }
-        xmpp.send_gcm_message(message)
+        send_gcm_message("WAIT", gcm_bot.iot_mahjong_s6)
+        send_gcm_message("DRAW", gcm_bot.iot_mahjong)
 
     def tell_p2_discard(self):
-        # tell p1 to discard a tile by flipping tile
-        # sendMessage(message="discard")
-        # client should process and show relevant thing
-        message = {
-            "to": gcm_bot.iot_mahjong,
-            "message_id": uuid.uuid1().urn[9:],
-            "data":
-                {
-                    "message": "DISCARD"
-                },
-            "time_to_live": 600,
-            "delay_while_idle": True,
-            "delivery_receipt_requested": True
-        }
-        xmpp.send_gcm_message(message)
+        send_gcm_message("WAIT", gcm_bot.iot_mahjong_s6)
+        send_gcm_message("DISCARD", gcm_bot.iot_mahjong)
 
 def start_the_game():
     print "GAME STARTED!"
@@ -387,30 +306,8 @@ def start_the_game():
     app.logger.debug("SEND P1 & P2 STARTING SETUP!")
 
     # s6 is p1 , s4 is p2
-    message = {
-        "to": gcm_bot.iot_mahjong_s6,
-        "message_id": uuid.uuid1().urn[9:],
-        "data":
-            {
-                "message": "SETUP"
-            },
-        "time_to_live": 600,
-        "delay_while_idle": True,
-        "delivery_receipt_requested": True
-    }
-    xmpp.send_gcm_message(message)
-    message = {
-        "to": gcm_bot.iot_mahjong,
-        "message_id": uuid.uuid1().urn[9:],
-        "data":
-            {
-                "message": "SETUP"
-            },
-        "time_to_live": 600,
-        "delay_while_idle": True,
-        "delivery_receipt_requested": True
-    }
-    xmpp.send_gcm_message(message)
+    send_gcm_message("SETUP_P1", gcm_bot.iot_mahjong_s6)
+    send_gcm_message("SETUP_P2", gcm_bot.iot_mahjong)
 
 # On android app, play game button should trigger this
 @app.route('/joingame', methods=['POST', 'GET'])

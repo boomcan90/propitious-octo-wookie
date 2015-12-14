@@ -1,32 +1,29 @@
+from gcm import GCM
 
-from transitions import Machine
 
 
-class Matter(object):
-    pass
+def send_gcm_message(message, reg_id):
+    gcm = GCM("AIzaSyAf6J6MHvUlpnT_FIOoCws8Fs8oL7E0oOc")
+    data = {'message': message}
+    gcm.plaintext_request(registration_id=reg_id, data=data)
 
-lump = Matter()
+send_gcm_message("DRAW", "c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF")
 
-states=['solid', 'liquid', 'gas', 'plasma']
 
-# And some transitions between states. We're lazy, so we'll leave out
-# the inverse phase transitions (freezing, condensation, etc.).
-transitions = [
-    { 'trigger': 'melt', 'source': 'solid', 'dest': 'liquid' },
-    { 'trigger': 'evaporate', 'source': 'liquid', 'dest': 'gas' },
-    { 'trigger': 'sublimate', 'source': 'solid', 'dest': 'gas' },
-    { 'trigger': 'ionize', 'source': 'gas', 'dest': 'plasma' }
-]
+# # Plaintext request
+# reg_id = '12'
+# gcm.plaintext_request(registration_id=reg_id, data=data)
 
-# Initialize
-machine = Machine(lump, states=states, transitions=transitions, initial='liquid')
+# # JSON request
+# reg_ids = ['12', '34', '69']
+# response = gcm.json_request(registration_ids=reg_ids, data=data)
 
-# Now lump maintains state...
-print lump.state
+# # Extra arguments
+# res = gcm.json_request(
+#     registration_ids=reg_ids, data=data,
+#     collapse_key='uptoyou', delay_while_idle=True, time_to_live=3600
+# )
 
-# And that state can change...
-lump.evaporate()
-print lump.state
-
-lump.ionize()
-print lump.state
+# # Topic Messaging
+# topic = 'foo'
+# gcm.send_topic_message(topic=topic, data=data)
