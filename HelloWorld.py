@@ -209,10 +209,10 @@ def player_update(tiles=None, extra=None):
             mahjong_game.goto_p1_end()
             r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p1_end":
-        r.set('game_state', mahjong_game.state)
         if tiles1.count("1") == 2:
             # p1 needs to discard a tile by putting it face down
             mahjong_game.goto_p2_start()
+            r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p2_start":
         r.set('game_state', mahjong_game.state)
         if tiles2.count("1") == 3:
