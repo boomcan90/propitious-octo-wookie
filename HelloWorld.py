@@ -255,7 +255,7 @@ def send_a_tile_to_user(user):
 
     if token != "":
         listOfTiles = jsonpickle.loads(r.get('listOfTiles'))
-        tile_to_send = tilesah.index(listOfTiles.pop())
+        tile_to_send = tiles.index(listOfTiles.pop())
         app.logger.debug(str(tile_to_send))
         app.logger.debug(str(token))
         grequests.map([photon_call.construct_tile_async(tile=str(tile_to_send), token=token)])
