@@ -135,8 +135,6 @@ from transitions import Machine
 def parseTileOrientation(tiles_dict):
     orientationList = []
     for key, value in tiles_dict.iteritems():
-        print value
-        sys.stdout.flush()
         # should be a tile
         orientationList.append(value.orientation)
     return orientationList
@@ -165,14 +163,19 @@ def player_update(tiles=None, extra=None):
     transitions = [
         # starting will expect both players to have tiles in a particular order
         { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start', 'before': 'send_p1_tile'},
+        # { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start'},
         # send p1 tile and say please flip up your tiles
         { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before':'tell_p1_discard'},
+        # { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end'},
         # say p1 now please discard a tile, flip 1 down
         { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start', 'before': 'send_p2_tile'},
+        # { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start'},
         # send p2 tile and say please flip up your tiles
         { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end', 'before':'tell_p2_discard' },
+        # { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end' },
         # say p2 now please discard a tile, flip 1 down
         { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start', 'before':'send_p1_tile' },
+        # { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start'},
         # go back to 1 if nobody won
         { 'trigger': 'p1_wins', 'source': 'p1_start', 'dest': 'p1_winner' },
         { 'trigger': 'p2_wins', 'source': 'p2_start', 'dest': 'p2_winner' }
@@ -184,6 +187,7 @@ def player_update(tiles=None, extra=None):
 
     app.logger.debug(r.get('game_state'))
 
+
     machine.set_state(r.get('game_state'))
 
     app.logger.debug("current state:: " + mahjong_game.state)
@@ -194,21 +198,16 @@ def player_update(tiles=None, extra=None):
         app.logger.debug("starting state evaluation")
         app.logger.debug("tiles1 1 count :: "  + str(tiles1.count("1")))
         app.logger.debug("tiles2 1 count :: "  + str(tiles2.count("1")))
-        r.set('game_state', mahjong_game.state)
         if tiles1.count("1") == 2 and tiles2.count("1") == 3:
-            # check for both p1 and p2
-            # then got goto p1
-            app.logger.debug("going to p1start")
             mahjong_game.goto_p1_start()
+            app.logger.debug("going to p1start")
+            r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p1_start":
-        r.set('game_state', mahjong_game.state)
         app.logger.debug("P1 START STATE HOORAYYYY")
         if tiles1.count("1") == 3:
-            # check for p1 tiles up
-            # check win combi
-            # once all up go to p1 end
             app.logger.debug("P1 END STATE GOING TO P2")
             mahjong_game.goto_p1_end()
+            r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p1_end":
         r.set('game_state', mahjong_game.state)
         if tiles1.count("1") == 2:
@@ -221,11 +220,13 @@ def player_update(tiles=None, extra=None):
             # check win combi
             # once all up go to p2 end
             mahjong_game.goto_p2_end()
+            r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p2_end":
         r.set('game_state', mahjong_game.state)
         if tiles2.count("1") == 2:
             # p2 needs to discard a tile by putting it face down
             mahjong_game.goto_p1_start()
+            r.set('game_state', mahjong_game.state)
     else:
         print "doesn't seem to be something p1_update needs to care about"
         sys.stdout.flush()
@@ -233,16 +234,41 @@ def player_update(tiles=None, extra=None):
 
 tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', 'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8', 'circle_9', 'number_1', 'number_2', 'number_3', 'number_4', 'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
 
+
+def send_a_tile_to_user(user):
+    token = ""
+    tiles = {}
+    if user == "p1":
+        tiles = jsonpickle.loads(r.get('user1_live_tiles'))
+    if user == "p2":
+        tiles = jsonpickle.loads(r.get('user2_live_tiles'))
+
+    for key, value in tiles.iteritems():
+        if value.orientation == "0":
+            token = value.token
+            break
+
+    if token != "":
+        listOfTiles = jsonpickle.loads(r.get('listOfTiles'))
+        tile_to_send = listOfTiles.pop()
+        photon_call.construct_tile_async(tile=str(tile_to_send), token=token)
+        r.set('listOfTiles', jsonpickle.dumps(listOfTiles))
+
+
 class Mahjong(object):
     def send_p1_tile(self):
+        #for user1 tile set send him a tile
+        send_a_tile_to_user("p1")
         send_gcm_message("DRAW", gcm_bot.iot_mahjong_s6)
         send_gcm_message("WAIT", gcm_bot.iot_mahjong)
 
     def tell_p1_discard(self):
+
         send_gcm_message("DISCARD", gcm_bot.iot_mahjong_s6)
         send_gcm_message("WAIT", gcm_bot.iot_mahjong)
 
     def send_p2_tile(self):
+        send_a_tile_to_user("p1")
         send_gcm_message("WAIT", gcm_bot.iot_mahjong_s6)
         send_gcm_message("DRAW", gcm_bot.iot_mahjong)
 

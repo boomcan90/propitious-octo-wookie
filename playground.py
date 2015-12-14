@@ -7,7 +7,7 @@
 #     data = {'message': message}
 #     gcm.plaintext_request(registration_id=reg_id, data=data)
 
-# send_gcm_message("DRAW", "c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF")
+# send_gcm_message("DISCARD", "c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF")
 
 
 # # Plaintext request
@@ -45,7 +45,10 @@ machine.add_transition('melt', 'solid', 'liquid', before='set_environment')
 
 lump.melt(45)  # positional arg
 lump.print_temperature()
-
+print lump.state
+print lump.print_temperature()
 machine.set_state('solid')  # reset state so we can melt again
 lump.melt(pressure=300.23)  # keyword args also work
 lump.print_pressure()
+machine.set_state('liquid')
+print lump.state
