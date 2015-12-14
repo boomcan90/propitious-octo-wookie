@@ -184,17 +184,21 @@ def player_update(tiles=None, extra=None):
 
     app.logger.debug(r.get('game_state'))
 
-    # mahjong_game.set_state(r.get('game_state'))
+    machine.set_state(r.get('game_state'))
 
     app.logger.debug("current state:: " + mahjong_game.state)
-    app.logger.debug(tiles1)
+    app.logger.debug(tiles1.count("1"))
+    app.logger.debug(tiles2.count("1"))
 
     if mahjong_game.state == "starting":
         app.logger.debug("starting state evaluation")
+        app.logger.debug("tiles1 1 count :: "  + tiles1.count("1"))
+        app.logger.debug("tiles2 1 count :: "  + tiles2.count("1"))
         r.set('game_state', mahjong_game.state)
         if tiles1.count("1") == 2 and tiles2.count("1") == 3:
             # check for both p1 and p2
             # then got goto p1
+            app.logger.debug("going to p1start")
             mahjong_game.goto_p1_start()
     elif mahjong_game.state == "p1_start":
         r.set('game_state', mahjong_game.state)
