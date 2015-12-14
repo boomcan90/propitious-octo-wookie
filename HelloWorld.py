@@ -244,18 +244,18 @@ def send_a_tile_to_user(user):
     token = ""
     tiles = {}
     if user == "p1":
-        tiles = jsonpickle.loads(r.get('user1_live_tiles'))
+        tilesah = jsonpickle.loads(r.get('user1_live_tiles'))
     if user == "p2":
-        tiles = jsonpickle.loads(r.get('user2_live_tiles'))
+        tilesah = jsonpickle.loads(r.get('user2_live_tiles'))
 
-    for key, value in tiles.iteritems():
+    for key, value in tilesah.iteritems():
         if value.orientation == "0":
             token = value.token
             break
 
     if token != "":
         listOfTiles = jsonpickle.loads(r.get('listOfTiles'))
-        tile_to_send = tiles.index(listOfTiles.pop())
+        tile_to_send = tilesah.index(listOfTiles.pop())
         app.logger.debug(str(tile_to_send))
         app.logger.debug(str(token))
         grequests.map([photon_call.construct_tile_async(tile=str(tile_to_send), token=token)])
