@@ -155,15 +155,15 @@ def parseTileKind(tiles_dict):
     return kindList
 
 
-def check_if_win(tile_dict):
+def check_if_win(tiles_dict):
     hasWon = False
 
     current_combinations = []
 
-    for key, value in tile_dict.iteritems():
+    for key, value in tiles_dict.iteritems():
         # value kind should be a string
         app.logger.debug(jsonpickle.dumps(value))
-        current_combinations.append(value["kind"])
+        current_combinations.append(value.kind)
 
     try:
         current_combinations = [int(val) for val in current_combinations]
