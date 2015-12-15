@@ -419,7 +419,7 @@ def start_the_game():
          'before': 'send_p1_win'},
         {'trigger': 'p2_wins',
          'source': 'p2_start',
-         'dest': 'p2_winner',
+         'dest': 'p2_wins',
          'before': 'send_p2_win'}
     ]
     # setup machine
