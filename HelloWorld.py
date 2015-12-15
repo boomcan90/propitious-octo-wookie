@@ -90,7 +90,7 @@ def initial_execution():
     r.set('user2_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
     # Hacky game state
-    r.set('game_state', "nothing")
+    r.set('game_state', "halt")
 
 ##################################################################
 # SETUP GcmBot. Basically you have an object called "xmpp"
@@ -162,6 +162,7 @@ def check_if_win(tile_dict):
 
     for key, value in tile_dict.iteritems():
         # value kind should be a string
+        app.logger.debug(jsonpickle.dumps(value))
         current_combinations.append(value["kind"])
 
     try:
@@ -513,9 +514,7 @@ def tileUpdateHandler(tile_data):
             #     pub.sendMessage('p1_update', tiles=tiles1, extra=None)
 
             tiles1[tile_data["token"]].orientation = tile_data["orientation"]
-            tiles1[tile_data["token"]].kind = tile_data[
-                "tile"
-            ]  # update tile kind with "tile from photon"
+            tiles1[tile_data["token"]].kind = tile_data["tile"]
             tiles1[tile_data["token"]].x = tile_data["x"]
             tiles1[tile_data["token"]].y = tile_data["y"]
             tiles1[tile_data["token"]].z = tile_data["z"]
@@ -528,9 +527,7 @@ def tileUpdateHandler(tile_data):
             #     pub.sendMessage('p2_update', tiles=tiles2, extra=None)
 
             tiles2[tile_data["token"]].orientation = tile_data["orientation"]
-            tiles2[tile_data["token"]].kind = tile_data[
-                "tile"
-            ]  # update tile kind with "tile from photon"
+            tiles2[tile_data["token"]].kind = tile_data["tile"]
             tiles2[tile_data["token"]].x = tile_data["x"]
             tiles2[tile_data["token"]].y = tile_data["y"]
             tiles2[tile_data["token"]].z = tile_data["z"]
@@ -587,7 +584,7 @@ def playermove():
         else:
             data = i.json()
             app.logger.debug("not yet")
-            did =  data["coreInfo"]["deviceID"]
+            did = data["coreInfo"]["deviceID"]
             app.logger.debug(jsonpickle.dumps(data))
             obj = jsonpickle.loads(data["result"])
             app.logger.debug("not yet")
@@ -596,7 +593,6 @@ def playermove():
             tileUpdateHandler(obj)
 
     player_update()
-
 
     return "player move"
 
