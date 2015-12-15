@@ -277,8 +277,8 @@ def player_update(tiles=None, extra=None):
     elif mahjong_game.state == "p2_start":
         app.logger.debug("P2 START STATE")
         if tiles2.count("1") == 3:
-            if check_if_win(tiles1_list):
-                mahjong_game.p1_wins()
+            if check_if_win(tiles2_list):
+                mahjong_game.p2_wins()
             else:
                 mahjong_game.goto_p2_end()
                 r.set('game_state', mahjong_game.state)
@@ -415,7 +415,7 @@ def start_the_game():
         # go back to 1 if nobody won
         {'trigger': 'p1_wins',
          'source': 'p1_start',
-         'dest': 'p1_winner',
+         'dest': 'p1_wins',
          'before': 'send_p1_win'},
         {'trigger': 'p2_wins',
          'source': 'p2_start',
