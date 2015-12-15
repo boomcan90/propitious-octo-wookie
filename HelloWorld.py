@@ -569,9 +569,11 @@ def playermove():
     # send to photon
     reqList = []
     for i in range(3):
+        photon_token = user1_tiles[i]
         reqList.append(photon_call.get_data_async(token=photon_token))
 
     for i in range(3):
+        photon_token = user2_tiles[i]
         reqList.append(photon_call.get_data_async(token=photon_token))
 
     result = grequests.map(reqList)
