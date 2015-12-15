@@ -37,7 +37,6 @@ res = grequests.map([fn])
 data = res[0].json()
 did =  data["coreInfo"]["deviceID"]
 obj = jsonpickle.loads(data["result"])
-print obj["x"]
 obj["token"] = did
 print jsonpickle.dumps(obj)
 

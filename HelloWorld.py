@@ -501,6 +501,7 @@ def force_start_game():
 
 # Handles each tile's update and sets it in redis (triplets)
 def tileUpdateHandler(tile_data):
+    app.logger.debug("hadnler")
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
     # app.logger.debug(jsonpickle.dumps(tiles1))
@@ -578,16 +579,20 @@ def playermove():
 
     result = grequests.map(reqList)
 
-    app.logger.debug(content)
-
     for i in result:
+        app.logger.debug(i.status_code)
         if i.status_code != 200:
-            return "not ready yet"
+            app.logger.debug("not yet")
+            return "nope"
         else:
-            resjson = i.json()
-            did =  resjson["coreInfo"]["deviceID"]
-            obj = jsonpickle.loads(resjson["result"])
+            data = i.json()
+            app.logger.debug("not yet")
+            did =  data["coreInfo"]["deviceID"]
+            app.logger.debug(jsonpickle.dumps(data))
+            obj = jsonpickle.loads(data["result"])
+            app.logger.debug("not yet")
             obj["token"] = did
+            app.logger.debug("not yet")
             tileUpdateHandler(obj)
 
     player_update()
