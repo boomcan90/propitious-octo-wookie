@@ -1,6 +1,7 @@
 import requests
 import sys
 import grequests
+import jsonpickle
 
 # file called credentials.py which constains the following vars
 from credentials import *
@@ -33,7 +34,13 @@ def get_data_async(tile=None, token=None):
 
 fn = get_data_async(token="1c003e000d47343432313031")
 res = grequests.map([fn])
-print res[0].json()
+data = res[0].json()
+did =  data["coreInfo"]["deviceID"]
+obj = jsonpickle.loads(data["result"])
+print obj["x"]
+obj["token"] = did
+print jsonpickle.dumps(obj)
+
 
 # from gcm import GCM
 

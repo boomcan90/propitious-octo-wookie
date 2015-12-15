@@ -579,11 +579,17 @@ def playermove():
     result = grequests.map(reqList)
 
     app.logger.debug(content)
+
     for i in result:
         if i.status_code != 200:
             return "not ready yet"
         else:
-            tileUpdateHandler(i.json().result)
+            resjson = i.json()
+            did =  resjson["coreInfo"]["deviceID"]
+            obj = jsonpickle.loads(resjson["result"])
+            obj["token"] = did
+            tileUpdateHandler(obj)
+
     player_update()
 
 
