@@ -32,7 +32,6 @@ app = Flask(__name__)
 import logging
 from logging import StreamHandler
 
-
 # only python 3.2 fixed a bug for %z for this
 #naive_date = datetime.datetime.strptime("2015-12-13T03:34:53+00:00", "%Y-%m-%dT%H:%M:%S%z")
 # ts = ciso8601.parse_datetime("2015-12-12T09:49:54.874Z")
@@ -41,27 +40,33 @@ from logging import StreamHandler
 # print(date_converted)   # 2013-10-21 08:44:08-07:00
 # sys.stdout.flush()
 
-
 redis_url = os.getenv('HEROKU_REDIS_MAUVE_URL', 'redis://localhost:6379')
 r = redis.from_url(redis_url)
 
 # orange: pirate, morphing, zombie
-user1_tiles = ["250040000347343337373737", "2b002d000447343233323032", "3b003d000347343339373536"]
+user1_tiles = ["250040000347343337373737", "2b002d000447343233323032",
+               "3b003d000347343339373536"]
 # green: raptor, hunter, dentist
-user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031", "37001c001347343432313031"]
+user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031",
+               "37001c001347343432313031"]
+
+# complete tile list
+tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3',
+         'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8',
+         'circle_9', 'number_1', 'number_2', 'number_3', 'number_4',
+         'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
+
 
 @app.before_first_request
 def initial_execution():
-##################################################################
-# GLOBAL OBJECTS
-##################################################################
-#Redis
+    ##################################################################
+    # GLOBAL OBJECTS
+    ##################################################################
     file_handler = StreamHandler()
     app.logger.setLevel(logging.DEBUG)  # set the desired logging level here
     app.logger.addHandler(file_handler)
 
     r.set('temp_photon_data', 'nothing yet')
-
 
     #Hacky user management and tiles
     r.set('online_clients', jsonpickle.dumps([]))
@@ -74,13 +79,12 @@ def initial_execution():
     r.set('user1_tiles', jsonpickle.dumps(user1_tiles))
     r.set('user2_tiles', jsonpickle.dumps(user2_tiles))
 
-    temp_user_tiles = {}
+    temp_user_tiles = dict()
     for token in user1_tiles:
         temp_user_tiles[token] = Tile(token=token)
     r.set('user1_live_tiles', jsonpickle.dumps(temp_user_tiles))
 
-
-    temp_user_tiles = {}
+    temp_user_tiles = dict()
     for token in user2_tiles:
         temp_user_tiles[token] = Tile(token=token)
     r.set('user2_live_tiles', jsonpickle.dumps(temp_user_tiles))
@@ -100,17 +104,19 @@ def initial_execution():
 
 # xmpp.startConnection()
 
-
 # Keyboard Interrupt for XMPP thread
 print "logging configured! & sys imported"
 sys.stdout.flush()
+
 
 def signal_handler(signal, frame):
     print 'You pressed Ctrl+C!'
     xmpp.disconnect()
     sys.exit(0)
 
+
 signal.signal(signal.SIGINT, signal_handler)
+
 
 ##################################################################
 # Subscribe to GcmBot's updates
@@ -124,7 +130,6 @@ def gcm_updates(arg1, arg2=None):
 # function_that_wants_updates, "string"
 pub.subscribe(gcm_updates, 'clientMessageReceived')
 
-
 ##################################################################
 # GAMEPLAY
 ##################################################################
@@ -132,12 +137,15 @@ pub.subscribe(gcm_updates, 'clientMessageReceived')
 # Sigh this really should be done better as an object
 #
 from transitions import Machine
+
+
 def parseTileOrientation(tiles_dict):
     orientationList = []
     for key, value in tiles_dict.iteritems():
         # should be a tile
         orientationList.append(value.orientation)
     return orientationList
+
 
 def parseTileKind(tiles_dict):
     kindList = []
@@ -146,58 +154,105 @@ def parseTileKind(tiles_dict):
         kindList.append(value.kind)
     return kindList
 
+
+def check_if_win(tile_dict):
+    hasWon = False
+
+    current_combinations = []
+
+    for key, value in tile_dict.iteritems():
+        # value kind should be a string
+        current_combinations.append(value["kind"])
+
+    try:
+        current_combinations = [int(val) for val in current_combinations]
+        # map to names
+        current_combinations = [tiles[num] for num in current_combinations]
+    except:
+        app.logger.debug("Error converting string to int in current_combinations")
+
+    if current_combinations in winningCombinations:
+        print "you win"
+        hasWon = True
+
+    return hasWon
+
 ##########################################################################
+
 
 def send_gcm_message(message, reg_id):
     gcm = GCM("AIzaSyAf6J6MHvUlpnT_FIOoCws8Fs8oL7E0oOc")
     data = {'message': message}
     gcm.plaintext_request(registration_id=reg_id, data=data)
 
+
 def player_update(tiles=None, extra=None):
-    tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
-    tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
-    tiles1 = parseTileOrientation(tiles1)
-    tiles2 = parseTileOrientation(tiles2)
+    tiles1_list = jsonpickle.loads(r.get('user1_live_tiles'))
+    tiles2_list = jsonpickle.loads(r.get('user2_live_tiles'))
+    tiles1 = parseTileOrientation(tiles1_list)
+    tiles2 = parseTileOrientation(tiles2_list)
+
+    if None in tiles1 or None in tiles2:
+        # not all tiles transmitting
+        app.logger.debug("Some tiles saying None")
+        return
 
     # recreate statemachine
     transitions = [
         # starting will expect both players to have tiles in a particular order
-        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start', 'before': 'send_p1_tile'},
-        # { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start'},
+        {'trigger': 'goto_p1_start',
+         'source': 'starting',
+         'dest': 'p1_start',
+         'before': 'send_p1_tile'},
         # send p1 tile and say please flip up your tiles
-        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before':'tell_p1_discard'},
-        # { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end'},
+        {'trigger': 'goto_p1_end',
+         'source': 'p1_start',
+         'dest': 'p1_end',
+         'before': 'tell_p1_discard'},
         # say p1 now please discard a tile, flip 1 down
-        { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start', 'before': 'send_p2_tile'},
-        # { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start'},
+        {'trigger': 'goto_p2_start',
+         'source': 'p1_end',
+         'dest': 'p2_start',
+         'before': 'send_p2_tile'},
         # send p2 tile and say please flip up your tiles
-        { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end', 'before':'tell_p2_discard' },
-        # { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end' },
+        {'trigger': 'goto_p2_end',
+         'source': 'p2_start',
+         'dest': 'p2_end',
+         'before': 'tell_p2_discard'},
         # say p2 now please discard a tile, flip 1 down
-        { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start', 'before':'send_p1_tile' },
-        # { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start'},
+        {'trigger': 'goto_p1_again',
+         'source': 'p2_end',
+         'dest': 'p1_start',
+         'before': 'send_p1_tile'},
         # go back to 1 if nobody won
-        { 'trigger': 'p1_wins', 'source': 'p1_start', 'dest': 'p1_winner' },
-        { 'trigger': 'p2_wins', 'source': 'p2_start', 'dest': 'p2_winner' }
+        {'trigger': 'p1_wins',
+         'source': 'p1_start',
+         'dest': 'p1_winner',
+         'before': 'send_p1_win'},
+        {'trigger': 'p2_wins',
+         'source': 'p2_start',
+         'dest': 'p2_winner',
+         'before': 'send_p2_win'}
     ]
 
     # setup machine
     mahjong_game = Mahjong()
-    machine = Machine(mahjong_game, states=['starting', 'p1_start', 'p1_end', 'p2_start', 'p2_end', 'p1_win', 'p2_win'], transitions=transitions, initial='starting')
+    machine = Machine(mahjong_game,
+                      states=['starting', 'p1_start', 'p1_end', 'p2_start',
+                              'p2_end', 'p1_win', 'p2_win', 'halt'],
+                      transitions=transitions,
+                      initial='starting')
 
     app.logger.debug(r.get('game_state'))
-
 
     machine.set_state(r.get('game_state'))
 
     app.logger.debug("current state:: " + mahjong_game.state)
-    app.logger.debug(tiles1.count("1"))
-    app.logger.debug(tiles2.count("1"))
+    app.logger.debug("tiles1 1s count :: " + str(tiles1.count("1")))
+    app.logger.debug("tiles2 1s count :: " + str(tiles2.count("1")))
 
     if mahjong_game.state == "starting":
         app.logger.debug("starting state evaluation")
-        app.logger.debug("tiles1 1 count :: "  + str(tiles1.count("1")))
-        app.logger.debug("tiles2 1 count :: "  + str(tiles2.count("1")))
         if tiles1.count("1") == 2 and tiles2.count("1") == 2:
             mahjong_game.goto_p1_start()
             app.logger.debug("going to P1 START")
@@ -205,44 +260,42 @@ def player_update(tiles=None, extra=None):
     elif mahjong_game.state == "p1_start":
         app.logger.debug("P1 START")
         if tiles1.count("1") == 3:
-            app.logger.debug("going P1 END STATE")
-            mahjong_game.goto_p1_end()
-            r.set('game_state', mahjong_game.state)
+            # check for win else
+            if check_if_win(tiles1_list):
+                mahjong_game.p1_wins()
+            else:
+                app.logger.debug("going P1 END STATE")
+                mahjong_game.goto_p1_end()
+                r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p1_end":
         app.logger.debug("P1 END")
         if tiles1.count("1") == 2 and tiles2.count("1") == 2:
-            # p1 needs to discard a tile by putting it face down
             mahjong_game.goto_p2_start()
             app.logger.debug("going P2 START STATE")
             r.set('game_state', mahjong_game.state)
     elif mahjong_game.state == "p2_start":
         app.logger.debug("P2 START STATE")
         if tiles2.count("1") == 3:
-            # check for p2 tiles up
-            # check win combi
-            # once all up go to p2 end
-            mahjong_game.goto_p2_end()
-            r.set('game_state', mahjong_game.state)
-            app.logger.debug("P2 END STATE")
+            if check_if_win(tiles1_list):
+                mahjong_game.p1_wins()
+            else:
+                mahjong_game.goto_p2_end()
+                r.set('game_state', mahjong_game.state)
+                app.logger.debug("going P2 END STATE")
     elif mahjong_game.state == "p2_end":
-        app.logger.debug("going P2 END STATE")
+        app.logger.debug("P2 END STATE")
         r.set('game_state', mahjong_game.state)
         if tiles2.count("1") == 2:
-            # p2 needs to discard a tile by putting it face down
             mahjong_game.goto_p1_again()
             r.set('game_state', mahjong_game.state)
-            app.logger.debug("P2 END STATE")
+            app.logger.debug("going P1 start state again")
     else:
-        print "doesn't seem to be something p1_update needs to care about"
-        sys.stdout.flush()
-
-
-tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3', 'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8', 'circle_9', 'number_1', 'number_2', 'number_3', 'number_4', 'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
+        app.logger.debug("probably halt state")
 
 
 def send_a_tile_to_user(user):
     token = ""
-    tilesah = {}
+    tilesah = dict()
     if user == "p1":
         tilesah = jsonpickle.loads(r.get('user1_live_tiles'))
     if user == "p2":
@@ -253,12 +306,20 @@ def send_a_tile_to_user(user):
             token = value.token
             break
 
+    listOfTiles = jsonpickle.loads(r.get('listOfTiles'))
+
+    if len(listOfTiles) <= 0:
+        r.set('game_state', 'halt')
+        send_gcm_message("OUTOFTILES", gcm_bot.iot_mahjong_s6)
+        send_gcm_message("OUTOFTILES", gcm_bot.iot_mahjong)
+        return
+
     if token != "":
-        listOfTiles = jsonpickle.loads(r.get('listOfTiles'))
         tile_to_send = tiles.index(listOfTiles.pop())
         app.logger.debug(str(tile_to_send))
         app.logger.debug(str(token))
-        grequests.map([photon_call.construct_tile_async(tile=str(tile_to_send), token=token)])
+        grequests.map([photon_call.construct_tile_async(tile=str(tile_to_send),
+                                                        token=token)])
         r.set('listOfTiles', jsonpickle.dumps(listOfTiles))
 
 
@@ -283,6 +344,15 @@ class Mahjong(object):
         send_gcm_message("WAIT", gcm_bot.iot_mahjong_s6)
         send_gcm_message("DISCARD", gcm_bot.iot_mahjong)
 
+    def send_p1_win(self):
+        send_gcm_message("P1WIN", gcm_bot.iot_mahjong_s6)
+        send_gcm_message("P1WIN", gcm_bot.iot_mahjong)
+
+    def send_p2_win(self):
+        send_gcm_message("P2WIN", gcm_bot.iot_mahjong_s6)
+        send_gcm_message("P2WIN", gcm_bot.iot_mahjong)
+
+
 def start_the_game():
     print "GAME STARTED!"
     sys.stdout.flush()
@@ -295,12 +365,14 @@ def start_the_game():
     for i in range(3):
         photon_token = user1_tiles[i]
         tile_to_send = tiles.index(listOfTiles.pop())
-        reqList.append(photon_call.construct_tile_async(tile=str(tile_to_send), token=photon_token))
+        reqList.append(photon_call.construct_tile_async(tile=str(tile_to_send),
+                                                        token=photon_token))
 
     for i in range(3):
         photon_token = user2_tiles[i]
         tile_to_send = tiles.index(listOfTiles.pop())
-        reqList.append(photon_call.construct_tile_async(tile=str(tile_to_send), token=photon_token))
+        reqList.append(photon_call.construct_tile_async(tile=str(tile_to_send),
+                                                        token=photon_token))
 
     grequests.map(reqList)
 
@@ -310,33 +382,60 @@ def start_the_game():
     # trigger source dest
     transitions = [
         # starting will expect both players to have tiles in a particular order
-        { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start', 'before': 'send_p1_tile'},
+        {'trigger': 'goto_p1_start',
+         'source': 'starting',
+         'dest': 'p1_start',
+         'before': 'send_p1_tile'},
+        # { 'trigger': 'goto_p1_start', 'source': 'starting', 'dest': 'p1_start'},
         # send p1 tile and say please flip up your tiles
-        { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end', 'before':'tell_p1_discard'},
+        {'trigger': 'goto_p1_end',
+         'source': 'p1_start',
+         'dest': 'p1_end',
+         'before': 'tell_p1_discard'},
+        # { 'trigger': 'goto_p1_end', 'source': 'p1_start', 'dest': 'p1_end'},
         # say p1 now please discard a tile, flip 1 down
-        { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start', 'before': 'send_p2_tile'},
+        {'trigger': 'goto_p2_start',
+         'source': 'p1_end',
+         'dest': 'p2_start',
+         'before': 'send_p2_tile'},
+        # { 'trigger': 'goto_p2_start', 'source': 'p1_end', 'dest': 'p2_start'},
         # send p2 tile and say please flip up your tiles
-        { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end', 'before':'tell_p2_discard' },
+        {'trigger': 'goto_p2_end',
+         'source': 'p2_start',
+         'dest': 'p2_end',
+         'before': 'tell_p2_discard'},
+        # { 'trigger': 'goto_p2_end', 'source': 'p2_start', 'dest': 'p2_end' },
         # say p2 now please discard a tile, flip 1 down
-        { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start', 'before':'send_p1_tile' },
+        {'trigger': 'goto_p1_again',
+         'source': 'p2_end',
+         'dest': 'p1_start',
+         'before': 'send_p1_tile'},
+        # { 'trigger': 'goto_p1_again', 'source': 'p2_end', 'dest': 'p1_start'},
         # go back to 1 if nobody won
-        { 'trigger': 'p1_wins', 'source': 'p1_start', 'dest': 'p1_winner' },
-        { 'trigger': 'p2_wins', 'source': 'p2_start', 'dest': 'p2_winner' }
+        {'trigger': 'p1_wins',
+         'source': 'p1_start',
+         'dest': 'p1_winner',
+         'before': 'send_p1_win'},
+        {'trigger': 'p2_wins',
+         'source': 'p2_start',
+         'dest': 'p2_winner',
+         'before': 'send_p2_win'}
     ]
-
     # setup machine
     mahjong_game = Mahjong()
-    machine = Machine(mahjong_game, states=['starting', 'p1_start', 'p1_end', 'p2_start', 'p2_end', 'p1_win', 'p2_win'], transitions=transitions, initial='starting')
+    machine = Machine(mahjong_game,
+                      states=['starting', 'p1_start', 'p1_end', 'p2_start',
+                              'p2_end', 'p1_win', 'p2_win', 'halt'],
+                      transitions=transitions,
+                      initial='starting')
 
     # set game state
     r.set('game_state', mahjong_game.state)
-
 
     print "SUBSCRIBED && MACHINE CREATED!", mahjong_game.state
     sys.stdout.flush()
 
     app.logger.debug(r.get('game_state'))
-
 
     #push notification tell p1 to arrange 2 up and 1 down
     #tell p2 to have all 3 up
@@ -345,6 +444,7 @@ def start_the_game():
     # s6 is p1 , s4 is p2
     send_gcm_message("SETUP_P1", gcm_bot.iot_mahjong_s6)
     send_gcm_message("SETUP_P2", gcm_bot.iot_mahjong)
+
 
 # On android app, play game button should trigger this
 @app.route('/joingame', methods=['POST', 'GET'])
@@ -368,6 +468,7 @@ def join_game():
         return "started"
     return "need another player"
 
+
 # forcefully reset the game, should broadcast to all clients, reset whatever to clean state
 @app.route('/resetgame', methods=['POST', 'GET'])
 def reset_game():
@@ -375,18 +476,20 @@ def reset_game():
     app.logger.debug("online_clients :: " + r.get('online_clients'))
     return "reset"
 
-@app.route('/fakep1update', methods=['GET'])
-def fire_p1_update():
+
+@app.route('/fakeupdate', methods=['GET'])
+def fire_fake_update():
     player_update("")
     return "meow"
 
-@app.route('/fakep2update', methods=['GET'])
+
+@app.route('/gotostart', methods=['GET'])
 def fire_p2_update():
-    mahjong_game.goto_p1_start()
-    app.logger.debug(mahjong_game.state)
+
     return "chirpy chirp chirp"
 
-@app.route('/forcestart', methods=['GET'])
+
+@app.route('/restartgame', methods=['GET'])
 def force_start_game():
     start_the_game()
     return "pew pew"
@@ -394,6 +497,7 @@ def force_start_game():
 ##################################################################
 # PHOTON UPDATES
 ##################################################################
+
 
 # Handles each tile's update and sets it in redis (triplets)
 def tileUpdateHandler(tile_data):
@@ -408,13 +512,13 @@ def tileUpdateHandler(tile_data):
             #     pub.sendMessage('p1_update', tiles=tiles1, extra=None)
 
             tiles1[tile_data["source"]].orientation = tile_data["orientation"]
-            tiles1[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
+            tiles1[tile_data["source"]].kind = tile_data[
+                "tile"
+            ]  # update tile kind with "tile from photon"
             tiles1[tile_data["source"]].x = tile_data["x"]
             tiles1[tile_data["source"]].y = tile_data["y"]
             tiles1[tile_data["source"]].z = tile_data["z"]
             r.set('user1_live_tiles', jsonpickle.dumps(tiles1))
-
-
 
         elif tile_data["source"] in user2_tiles:
             # if tiles2[tile_data["source"]].orientation != tile_data["orientation"]:
@@ -423,7 +527,9 @@ def tileUpdateHandler(tile_data):
             #     pub.sendMessage('p2_update', tiles=tiles2, extra=None)
 
             tiles2[tile_data["source"]].orientation = tile_data["orientation"]
-            tiles2[tile_data["source"]].kind = tile_data["tile"] # update tile kind with "tile from photon"
+            tiles2[tile_data["source"]].kind = tile_data[
+                "tile"
+            ]  # update tile kind with "tile from photon"
             tiles2[tile_data["source"]].x = tile_data["x"]
             tiles2[tile_data["source"]].y = tile_data["y"]
             tiles2[tile_data["source"]].z = tile_data["z"]
@@ -431,6 +537,7 @@ def tileUpdateHandler(tile_data):
 
         else:
             app.logger.debug('An error occurred processing tile data.')
+
 
 @app.route('/photonUpdate', methods=['POST'])
 def photonUpdate():
@@ -441,6 +548,7 @@ def photonUpdate():
     # more updating to be done
     tileUpdateHandler(content)
     return "ok"
+
 
 @app.route('/latestPhotonUpdate', methods=['GET'])
 def photonLastestUpdate():
@@ -454,6 +562,7 @@ def photonLastestUpdate():
     mimetype="application/json")
     return resp
 
+
 @app.route('/playermove', methods=['POST'])
 def playermove():
     content = request.get_json(silent=True, force=True)
@@ -462,15 +571,14 @@ def playermove():
     return "player move"
 
 
-
 ##################################################################
 # ROUTING
 ##################################################################
 @app.route('/')
 def main():
     # return "test"
-    return render_template('./sparktemplate.html', tempdata=1, utimedata=1,
-                           ledstatus=1, authbool=True)
+    return render_template('./demo.html')
+
 
 ##################################################################
 # Example of how you would use the XMPP object to send message.
@@ -480,17 +588,17 @@ def gcmTest():
     message = {
         "to": gcm_bot.iot_mahjong_s6,
         "message_id": uuid.uuid1().urn[9:],
-        "data":
-            {
-                "number": "mobile number",
-                "message": "Meow meow meow"
-            },
+        "data": {
+            "number": "mobile number",
+            "message": "Meow meow meow"
+        },
         "time_to_live": 600,
         "delay_while_idle": True,
         "delivery_receipt_requested": True
     }
     xmpp.send_gcm_message(message)
     return "SENT MESSAGE TO ANDROID VIA GCM!"
+
 
 ##################################################################
 # Register Client
@@ -519,6 +627,7 @@ def update():
     result = PhotonCall.sendToPhoton(action)
     return result
 
+
 @app.route("/getpos")
 def get_pos():
     pid = request.args.get('pid', '')
@@ -526,6 +635,7 @@ def get_pos():
         pid = None
     result = PhotonCall.getFromPhoton(pid)
     return result
+
 
 @app.route("/photondemo")
 def demo_page():
