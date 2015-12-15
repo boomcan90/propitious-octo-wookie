@@ -1,5 +1,5 @@
 {
-    "event": "iot_mahjong_production",
+    "event": "iot_mahjong_production_2",
     "url": "https://intense-caverns-6032.herokuapp.com/{{endpoint}}",
     "requestType": "POST",
     "json": {

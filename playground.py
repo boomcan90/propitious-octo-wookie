@@ -1,12 +1,49 @@
-from gcm import GCM
+import requests
+import sys
+import grequests
 
-def send_gcm_message(message, reg_id):
-    gcm = GCM("AIzaSyAf6J6MHvUlpnT_FIOoCws8Fs8oL7E0oOc")
-    data = {'message': message}
-    gcm.plaintext_request(registration_id=reg_id, data=data)
+# file called credentials.py which constains the following vars
+from credentials import *
 
-#fyygEukC5Hw:APA91bGyCm3e--AV1GMI0pmtBGjO3XiAjS8WqNW21TKVnGkLRAoJvzVskgX_4FM5JdaZYOG7Lmmg8lF8sII5lQcxetW2kvSLbwTvd18OgicF1zT6gFQ8YIwIwZy32VvTvwmcE3RLQWBe
-send_gcm_message("WAIT", "c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF")
+# PARTICLE_ID="YOUR_PARTICLE_ID"
+# PARTICLE_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
+# PARTICLE_FUNCTION = "YOUR_PARTICLE_FUNCTION"
+def callback_function(response):
+  # response.code # The HTTP status code
+  # response.headers # The HTTP headers
+  # response.body # The parsed response
+  # response.raw_body # The unparsed response
+  print response.body
+  sys.stdout.flush()
+
+def get_data_async(tile=None, token=None):
+    print "contructing"
+    sys.stdout.flush()
+    if (tile == None):
+        tile = 0
+
+    PARTICLE_FUNCTION = "getdata"
+    URL = "https://api.particle.io/v1/devices/"
+    SLASH = "/"
+    TOKEN_LABEL = "?access_token="
+    PAYLOAD = {"args": tile}
+    return grequests.get(URL + token + SLASH +
+                           PARTICLE_FUNCTION + TOKEN_LABEL +
+                           PARTICLE_ACCESS_TOKEN)
+
+fn = get_data_async(token="1c003e000d47343432313031")
+res = grequests.map([fn])
+print res[0].json()
+
+# from gcm import GCM
+
+# def send_gcm_message(message, reg_id):
+#     gcm = GCM("AIzaSyAf6J6MHvUlpnT_FIOoCws8Fs8oL7E0oOc")
+#     data = {'message': message}
+#     gcm.plaintext_request(registration_id=reg_id, data=data)
+
+# #fyygEukC5Hw:APA91bGyCm3e--AV1GMI0pmtBGjO3XiAjS8WqNW21TKVnGkLRAoJvzVskgX_4FM5JdaZYOG7Lmmg8lF8sII5lQcxetW2kvSLbwTvd18OgicF1zT6gFQ8YIwIwZy32VvTvwmcE3RLQWBe
+# send_gcm_message("WAIT", "c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF")
 
 # # Plaintext request
 # reg_id = '12'

@@ -546,7 +546,7 @@ def photonUpdate():
     content.pop("data", None)
     r.set('temp_photon_data', json.dumps(content))
     # more updating to be done
-    tileUpdateHandler(content)
+    # tileUpdateHandler(content)
     return "ok"
 
 
@@ -566,8 +566,25 @@ def photonLastestUpdate():
 @app.route('/playermove', methods=['POST'])
 def playermove():
     content = request.get_json(silent=True, force=True)
-    player_update()
+    # send to photon
+    reqList = []
+    for i in range(3):
+        reqList.append(photon_call.get_data_async(token=photon_token))
+
+    for i in range(3):
+        reqList.append(photon_call.get_data_async(token=photon_token))
+
+    result = grequests.map(reqList)
+
     app.logger.debug(content)
+    for i in result:
+        if i.status_code != 200:
+            return "not ready yet"
+        else:
+            tileUpdateHandler(i.json().result)
+    player_update()
+
+
     return "player move"
 
 

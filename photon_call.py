@@ -16,6 +16,21 @@ def callback_function(response):
   print response.code
   sys.stdout.flush()
 
+def get_data_async(tile=None, token=None):
+    print "contructing"
+    sys.stdout.flush()
+    if (tile == None):
+        tile = 0
+
+    PARTICLE_FUNCTION = "getdata"
+    URL = "https://api.particle.io/v1/devices/"
+    SLASH = "/"
+    TOKEN_LABEL = "?access_token="
+    PAYLOAD = {"args": tile}
+    return grequests.get(URL + token + SLASH +
+                           PARTICLE_FUNCTION + TOKEN_LABEL +
+                           PARTICLE_ACCESS_TOKEN)
+
 def construct_tile_async(tile=None, token=None):
     print "contructing"
     sys.stdout.flush()
