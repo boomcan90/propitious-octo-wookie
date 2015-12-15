@@ -505,35 +505,35 @@ def tileUpdateHandler(tile_data):
     tiles1 = jsonpickle.loads(r.get('user1_live_tiles'))
     tiles2 = jsonpickle.loads(r.get('user2_live_tiles'))
     # app.logger.debug(jsonpickle.dumps(tiles1))
-    if "source" in tile_data:
-        if tile_data["source"] in user1_tiles:
+    if "token" in tile_data:
+        if tile_data["token"] in user1_tiles:
             # if tiles1[tile_data["source"]].orientation != tile_data["orientation"]:
             #     #updates
             #     app.logger.debug('TILE1 CHANGE IN ORIENTATION')
             #     pub.sendMessage('p1_update', tiles=tiles1, extra=None)
 
-            tiles1[tile_data["source"]].orientation = tile_data["orientation"]
-            tiles1[tile_data["source"]].kind = tile_data[
+            tiles1[tile_data["token"]].orientation = tile_data["orientation"]
+            tiles1[tile_data["token"]].kind = tile_data[
                 "tile"
             ]  # update tile kind with "tile from photon"
-            tiles1[tile_data["source"]].x = tile_data["x"]
-            tiles1[tile_data["source"]].y = tile_data["y"]
-            tiles1[tile_data["source"]].z = tile_data["z"]
+            tiles1[tile_data["token"]].x = tile_data["x"]
+            tiles1[tile_data["token"]].y = tile_data["y"]
+            tiles1[tile_data["token"]].z = tile_data["z"]
             r.set('user1_live_tiles', jsonpickle.dumps(tiles1))
 
-        elif tile_data["source"] in user2_tiles:
+        elif tile_data["token"] in user2_tiles:
             # if tiles2[tile_data["source"]].orientation != tile_data["orientation"]:
             #     #updates
             #     app.logger.debug('TILE2 CHANGE IN ORIENTATION')
             #     pub.sendMessage('p2_update', tiles=tiles2, extra=None)
 
-            tiles2[tile_data["source"]].orientation = tile_data["orientation"]
-            tiles2[tile_data["source"]].kind = tile_data[
+            tiles2[tile_data["token"]].orientation = tile_data["orientation"]
+            tiles2[tile_data["token"]].kind = tile_data[
                 "tile"
             ]  # update tile kind with "tile from photon"
-            tiles2[tile_data["source"]].x = tile_data["x"]
-            tiles2[tile_data["source"]].y = tile_data["y"]
-            tiles2[tile_data["source"]].z = tile_data["z"]
+            tiles2[tile_data["token"]].x = tile_data["x"]
+            tiles2[tile_data["token"]].y = tile_data["y"]
+            tiles2[tile_data["token"]].z = tile_data["z"]
             r.set('user2_live_tiles', jsonpickle.dumps(tiles2))
 
         else:
