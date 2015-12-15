@@ -5,6 +5,7 @@ def send_gcm_message(message, reg_id):
     data = {'message': message}
     gcm.plaintext_request(registration_id=reg_id, data=data)
 
+#fyygEukC5Hw:APA91bGyCm3e--AV1GMI0pmtBGjO3XiAjS8WqNW21TKVnGkLRAoJvzVskgX_4FM5JdaZYOG7Lmmg8lF8sII5lQcxetW2kvSLbwTvd18OgicF1zT6gFQ8YIwIwZy32VvTvwmcE3RLQWBe
 send_gcm_message("WAIT", "c198uVK7Dgw:APA91bEvUwogy4q0Px33WfHpOPvOZe6U7uCML1hd1e7LDuBfoGC7zdErxWvBpld-FczRi8hFc4z5brY-WEIXXsXFiAgTQ9Ligyk_acrMfClitaq9mzyNqgW8RB2r76Tz8FjCZVYJbEhF")
 
 # # Plaintext request
