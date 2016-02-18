@@ -603,7 +603,7 @@ def playermove():
 @app.route('/')
 def main():
     # return "test"
-    return render_template('./demo.html')
+    return render_template('./index.html')
 
 
 ##################################################################

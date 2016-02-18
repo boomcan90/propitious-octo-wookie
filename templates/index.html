@@ -33,26 +33,170 @@
         <div class="row" ng-controller="AppController">
             <div class="col-md-offset-3 col-md-6">
                 <form class="form-signin">
-                    <h2 class="form-signin-heading">Please Enter Tokens and the Values</h2>
+                    <h2 class="form-signin-heading">Please Enter Tokens and the Values [0-21]</h2>
                     <hr>
-                    <h3>{[tile1.name]}</h3>
+                    <h3>{[tile1.name]}; {[tile1.color]}</h3>
                     <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile1.deviceToken">
-                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile1.value">
-                    <h3>{[tile2.name]}</h3>
-                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile2.deviceToken">
-                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile2.value">
-                    <h3>{[tile3.name]}</h3>
+                    {# <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile1.value"> #}
+                    <select name="singleSelect1" class="form-control" ng-model="tile1.value">
+                        <option value="0">N</option>
+                        <option value="1">E</option>
+                        <option value="2">S</option>
+                        <option value="3">W</option>
+                        <option value="4">Circle 1</option>
+                        <option value="5">Circle 2</option>
+                        <option value="6">Circle 3</option>
+                        <option value="7">Circle 4</option>
+                        <option value="8">Circle 5</option>
+                        <option value="9">Circle 6</option>
+                        <option value="10">Circle 7</option>
+                        <option value="11">Circle 8</option>
+                        <option value="12">Circle 9</option>
+                        <option value="13">1</option>
+                        <option value="14">2</option>
+                        <option value="15">3</option>
+                        <option value="16">4</option>
+                        <option value="17">5</option>
+                        <option value="18">6</option>
+                        <option value="19">7</option>
+                        <option value="20">8</option>
+                        <option value="21">9</option>
+                    </select>
+                    <h3>{[tile2.name]}; {[tile2.color]}</h3>
+                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile2.deviceToken"> {#
+                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile2.value"> #}
+                    <select name="singleSelect1" class="form-control" ng-model="tile2.value">
+                        <option value="0">N</option>
+                        <option value="1">E</option>
+                        <option value="2">S</option>
+                        <option value="3">W</option>
+                        <option value="4">Circle 1</option>
+                        <option value="5">Circle 2</option>
+                        <option value="6">Circle 3</option>
+                        <option value="7">Circle 4</option>
+                        <option value="8">Circle 5</option>
+                        <option value="9">Circle 6</option>
+                        <option value="10">Circle 7</option>
+                        <option value="11">Circle 8</option>
+                        <option value="12">Circle 9</option>
+                        <option value="13">1</option>
+                        <option value="14">2</option>
+                        <option value="15">3</option>
+                        <option value="16">4</option>
+                        <option value="17">5</option>
+                        <option value="18">6</option>
+                        <option value="19">7</option>
+                        <option value="20">8</option>
+                        <option value="21">9</option>
+                    </select>
+                    <h3>{[tile3.name]}; {[tile3.color]}</h3>
                     <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile3.deviceToken">
-                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile3.value">
-                    <h3>{[tile4.name]}</h3>
-                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile4.deviceToken">
-                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile4.value">
-                    <h3>{[tile5.name]}</h3>
-                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile5.deviceToken">
-                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile5.value">
-                    <h3>{[tile6.name]}</h3>
-                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile6.deviceToken">
-                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile6.value">
+                    {# <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile3.value"> #}
+                    <select name="singleSelect1" class="form-control" ng-model="tile3.value">
+                        <option value="0">N</option>
+                        <option value="1">E</option>
+                        <option value="2">S</option>
+                        <option value="3">W</option>
+                        <option value="4">Circle 1</option>
+                        <option value="5">Circle 2</option>
+                        <option value="6">Circle 3</option>
+                        <option value="7">Circle 4</option>
+                        <option value="8">Circle 5</option>
+                        <option value="9">Circle 6</option>
+                        <option value="10">Circle 7</option>
+                        <option value="11">Circle 8</option>
+                        <option value="12">Circle 9</option>
+                        <option value="13">1</option>
+                        <option value="14">2</option>
+                        <option value="15">3</option>
+                        <option value="16">4</option>
+                        <option value="17">5</option>
+                        <option value="18">6</option>
+                        <option value="19">7</option>
+                        <option value="20">8</option>
+                        <option value="21">9</option>
+                    </select>
+                    <h3>{[tile4.name]}; {[tile4.color]}</h3>
+                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile4.deviceToken"> {#
+                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile4.value"> #}
+                    <select name="singleSelect1" class="form-control" ng-model="tile4.value">
+                        <option value="0">N</option>
+                        <option value="1">E</option>
+                        <option value="2">S</option>
+                        <option value="3">W</option>
+                        <option value="4">Circle 1</option>
+                        <option value="5">Circle 2</option>
+                        <option value="6">Circle 3</option>
+                        <option value="7">Circle 4</option>
+                        <option value="8">Circle 5</option>
+                        <option value="9">Circle 6</option>
+                        <option value="10">Circle 7</option>
+                        <option value="11">Circle 8</option>
+                        <option value="12">Circle 9</option>
+                        <option value="13">1</option>
+                        <option value="14">2</option>
+                        <option value="15">3</option>
+                        <option value="16">4</option>
+                        <option value="17">5</option>
+                        <option value="18">6</option>
+                        <option value="19">7</option>
+                        <option value="20">8</option>
+                        <option value="21">9</option>
+                    </select>
+                    <h3>{[tile5.name]}; {[tile5.color]}</h3>
+                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile5.deviceToken"> {#
+                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile5.value"> #}
+                    <select name="singleSelect1" class="form-control" ng-model="tile5.value">
+                        <option value="0">N</option>
+                        <option value="1">E</option>
+                        <option value="2">S</option>
+                        <option value="3">W</option>
+                        <option value="4">Circle 1</option>
+                        <option value="5">Circle 2</option>
+                        <option value="6">Circle 3</option>
+                        <option value="7">Circle 4</option>
+                        <option value="8">Circle 5</option>
+                        <option value="9">Circle 6</option>
+                        <option value="10">Circle 7</option>
+                        <option value="11">Circle 8</option>
+                        <option value="12">Circle 9</option>
+                        <option value="13">1</option>
+                        <option value="14">2</option>
+                        <option value="15">3</option>
+                        <option value="16">4</option>
+                        <option value="17">5</option>
+                        <option value="18">6</option>
+                        <option value="19">7</option>
+                        <option value="20">8</option>
+                        <option value="21">9</option>
+                    </select>
+                    <h3>{[tile6.name]}; {[tile6.color]}</h3>
+                    <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile6.deviceToken"> {#
+                    <input type="text" class="form-control" placeholder="0,1,2,3" ng-model="tile6.value"> #}
+                    <select name="singleSelect1" class="form-control" ng-model="tile6.value">
+                        <option value="0">N</option>
+                        <option value="1">E</option>
+                        <option value="2">S</option>
+                        <option value="3">W</option>
+                        <option value="4">Circle 1</option>
+                        <option value="5">Circle 2</option>
+                        <option value="6">Circle 3</option>
+                        <option value="7">Circle 4</option>
+                        <option value="8">Circle 5</option>
+                        <option value="9">Circle 6</option>
+                        <option value="10">Circle 7</option>
+                        <option value="11">Circle 8</option>
+                        <option value="12">Circle 9</option>
+                        <option value="13">1</option>
+                        <option value="14">2</option>
+                        <option value="15">3</option>
+                        <option value="16">4</option>
+                        <option value="17">5</option>
+                        <option value="18">6</option>
+                        <option value="19">7</option>
+                        <option value="20">8</option>
+                        <option value="21">9</option>
+                    </select>
                     <br>
                     <button class="btn btn-lg btn-primary btn-block" type="button" ng-click="changeTileDisplays()">Change Display</button>
                 </form>

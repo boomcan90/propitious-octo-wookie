@@ -19,37 +19,37 @@
             name: "raptor_zombie",
             deviceToken: "210039000347343337373737",
             value: "1",
-            color: "orange"
+            color: "green"
         }
         $scope.tile2 = {
             name: "dentist_lawyer",
             deviceToken: "37001c001347343432313031",
             value: "2",
-            color: "orange"
+            color: "green"
         }
         $scope.tile3 = {
             name: "hunter_hoosier",
             deviceToken: "1c003e000d47343432313031",
             value: "3",
-            color: "orange"
+            color: "green"
         }
         $scope.tile4 = {
-            name: "monkey_hoosier",
+            name: "zombie",
             deviceToken: "3b003d000347343339373536",
             value: "1",
-            color: "green"
+            color: "orange"
         }
         $scope.tile5 = {
             name: "pirate_bobcat",
             deviceToken: "250040000347343337373737",
             value: "2",
-            color: "green"
+            color: "orange"
         }
         $scope.tile6 = {
             name: "morphing_bobcat",
             deviceToken: "2b002d000447343233323032",
             value: "3",
-            color: "green"
+            color: "orange"
         }
 
 
