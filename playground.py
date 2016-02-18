@@ -1,44 +1,44 @@
-import requests
-import sys
-import grequests
-import jsonpickle
+# import requests
+# import sys
+# import grequests
+# import jsonpickle
 
-# file called credentials.py which constains the following vars
-from credentials import *
+# # file called credentials.py which constains the following vars
+# from credentials import *
 
-# PARTICLE_ID="YOUR_PARTICLE_ID"
-# PARTICLE_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
-# PARTICLE_FUNCTION = "YOUR_PARTICLE_FUNCTION"
-def callback_function(response):
-  # response.code # The HTTP status code
-  # response.headers # The HTTP headers
-  # response.body # The parsed response
-  # response.raw_body # The unparsed response
-  print response.body
-  sys.stdout.flush()
+# # PARTICLE_ID="YOUR_PARTICLE_ID"
+# # PARTICLE_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
+# # PARTICLE_FUNCTION = "YOUR_PARTICLE_FUNCTION"
+# def callback_function(response):
+#   # response.code # The HTTP status code
+#   # response.headers # The HTTP headers
+#   # response.body # The parsed response
+#   # response.raw_body # The unparsed response
+#   print response.body
+#   sys.stdout.flush()
 
-def get_data_async(tile=None, token=None):
-    print "contructing"
-    sys.stdout.flush()
-    if (tile == None):
-        tile = 0
+# def get_data_async(tile=None, token=None):
+#     print "contructing"
+#     sys.stdout.flush()
+#     if (tile == None):
+#         tile = 0
 
-    PARTICLE_FUNCTION = "getdata"
-    URL = "https://api.particle.io/v1/devices/"
-    SLASH = "/"
-    TOKEN_LABEL = "?access_token="
-    PAYLOAD = {"args": tile}
-    return grequests.get(URL + token + SLASH +
-                           PARTICLE_FUNCTION + TOKEN_LABEL +
-                           PARTICLE_ACCESS_TOKEN)
+#     PARTICLE_FUNCTION = "getdata"
+#     URL = "https://api.particle.io/v1/devices/"
+#     SLASH = "/"
+#     TOKEN_LABEL = "?access_token="
+#     PAYLOAD = {"args": tile}
+#     return grequests.get(URL + token + SLASH +
+#                            PARTICLE_FUNCTION + TOKEN_LABEL +
+#                            PARTICLE_ACCESS_TOKEN)
 
-fn = get_data_async(token="1c003e000d47343432313031")
-res = grequests.map([fn])
-data = res[0].json()
-did =  data["coreInfo"]["deviceID"]
-obj = jsonpickle.loads(data["result"])
-obj["token"] = did
-print jsonpickle.dumps(obj)
+# fn = get_data_async(token="1c003e000d47343432313031")
+# res = grequests.map([fn])
+# data = res[0].json()
+# did =  data["coreInfo"]["deviceID"]
+# obj = jsonpickle.loads(data["result"])
+# obj["token"] = did
+# print jsonpickle.dumps(obj)
 
 
 # from gcm import GCM
@@ -94,10 +94,10 @@ print jsonpickle.dumps(obj)
 # machine.set_state('liquid')
 # print lump.state
 
-# import json
-# import jsonpickle
-# from mahjong_stm_objects import *
-# from mahjong_stm_util import *
+import json
+import jsonpickle
+from mahjong_stm_objects import *
+from mahjong_stm_util import *
 
 
 # # complete tile list
@@ -127,6 +127,17 @@ print jsonpickle.dumps(obj)
 #         hasWon = True
 
 #     return hasWon
+
+print winningCombinations
+
+# from itertools import product
+# n = 22
+# t = range(n)
+# print set(product(set(t),repeat = 3))
+
+from itertools import combinations
+print list(combinations(range(22),3))
+
 
 
 # fakedict = {"250040000347343337373737":
