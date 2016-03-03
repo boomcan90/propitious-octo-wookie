@@ -182,7 +182,8 @@ def check_if_win(tiles_dict):
 
 
 def send_gcm_message(message, reg_id):
-    gcm = GCM("AIzaSyAf6J6MHvUlpnT_FIOoCws8Fs8oL7E0oOc")
+
+    gcm = GCM("AIzaSyD2JGPOyHFwGGbfgCfKHyuU3JuhZ0GqRic")
     data = {'message': message}
     gcm.plaintext_request(registration_id=reg_id, data=data)
 
