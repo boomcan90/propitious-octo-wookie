@@ -5,18 +5,52 @@
    ========================================================================== */
 
 
+body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+}
+
+.title {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 30px;
+}
 
 
+button, button:active, button:focus, button:hover {
+    background: none;
+    border: 0;
+    color: inherit;
+     cursor: default;
+    font: inherit;
+    line-height: normal;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    font-size: 30px;
+    margin: 1rem 0;
+    outline: 0;
+}
+
+.change h3 {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 20px;
+}
 
 
+.grey {
+    color: #red;
+}
 
+.clearfix {
+    text-transform: none !important;
+    font-weight: 400;
+}
 
-
-
-
-
-
-
-
-
-
+#tile_control {
+    padding-left: 20px;
+}

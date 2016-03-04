@@ -14,26 +14,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+    <link rel="stylesheet" href="static/css/main.css">
     <style>
-    body {
-        padding-top: 50px;
-        padding-bottom: 20px;
-    }
+
     </style>
     <!-- <link rel="stylesheet" href="static/css/bootstrap-theme.min.css"> -->
     <link rel="stylesheet" href="static/css/main.css">
     <script src="static/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    <script type="text/javascript">
+        function masterHiddenToggle() {
+            $("#master_control").toggleClass('hidden');
+            $("#header_toggle").toggleClass('grey');
+        }
+        function tileHiddenToggle() {
+            $("#tile_control").toggleClass('hidden');
+            $("#tile_toggle").toggleClass('grey');
+        }
+    </script>
 </head>
 
 <body>
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-    <div class="container">
-        <div class="row" ng-controller="AppController">
+
+
+    <div class="title">
+        <h1>Smahjong</h1>
+    </div>
+    <div class="container restart">
+        <div class="row" ng-controller="MasterController">
             <div class="col-md-offset-3 col-md-6">
-                <form class="form-signin">
-                    <h2 class="form-signin-heading">Please Enter Tokens and the Values [0-21]</h2>
+                <button onclick="masterHiddenToggle()" class= id="header_toggle">
+                    Master Controls
+                </button>
+                <button class="btn btn-lg btn-primary btn-block hidden" ng-click="restartGame()" id="master_control">RESTART GAME</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container change">
+        <div class="row" ng-controller="AppController">
+
+            <div class="col-md-offset-3 col-md-6 " >
+            <button onclick="tileHiddenToggle()" class="clear" id="tile_toggle">
+                    Tile Controls
+                </button>
+                <form class="form-signin hidden" id="tile_control">
+                    <h3 class="form-signin-heading clearfix">Please Enter Tokens and the Values [0-21]</h3>
                     <hr>
                     <h3>{[tile1.name]}; {[tile1.color]}</h3>
                     <input type="text" class="form-control" placeholder="API TOKENS" ng-model="tile1.deviceToken">
@@ -203,7 +232,10 @@
             </div>
         </div>
     </div>
+
     <!-- /container -->
+
+
     <hr>
     <footer>
         <p style="padding-left: 20px;">&copy; SMAHJONG</p>
