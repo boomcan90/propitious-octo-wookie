@@ -51,7 +51,7 @@ user2_tiles = ["210039000347343337373737", "1c003e000d47343432313031",
                "37001c001347343432313031"]
 
 # complete tile list
-tiles = ['north', 'south', 'east', 'west', 'circle_1', 'circle_2', 'circle_3',
+tiles = ['north', 'east', 'south', 'west', 'circle_1', 'circle_2', 'circle_3',
          'circle_4', 'circle_5', 'circle_6', 'circle_7', 'circle_8',
          'circle_9', 'number_1', 'number_2', 'number_3', 'number_4',
          'number_5', 'number_6', 'number_7', 'number_8', 'number_9']
@@ -115,7 +115,7 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 
-signal.signal(signal.SIGINT, signal_handler)
+# signal.signal(signal.SIGINT, signal_handler)
 
 
 ##################################################################
@@ -128,7 +128,7 @@ def gcm_updates(arg1, arg2=None):
     print "more info: ", arg2
 
 # function_that_wants_updates, "string"
-pub.subscribe(gcm_updates, 'clientMessageReceived')
+# pub.subscribe(gcm_updates, 'clientMessageReceived')
 
 ##################################################################
 # GAMEPLAY
@@ -446,6 +446,7 @@ def start_the_game():
     # s6 is p1 , s4 is p2
     send_gcm_message("SETUP_P1", gcm_bot.iot_mahjong_s6)
     send_gcm_message("SETUP_P2", gcm_bot.iot_mahjong)
+    app.logger.debug("SENT!!")
 
 
 # On android app, play game button should trigger this
@@ -671,4 +672,4 @@ def demo_page():
 
 if __name__ == '__main__':
     # TODO: add algo to make the tiles here
-    app.run()
+    app.run(host='0.0.0.0')

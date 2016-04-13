@@ -32,7 +32,7 @@ def get_data_async(tile=None, token=None):
                            PARTICLE_ACCESS_TOKEN)
 
 def construct_tile_async(tile=None, token=None):
-    print "contructing"
+    print "constructing"
     sys.stdout.flush()
     if (tile == None):
         tile = 0
